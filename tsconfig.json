@@ -1,8 +1,8 @@
 {
   "include": ["src"],
-  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "module": "esnext",
+    "types": ["vitest/globals"],
     "target": "esnext",
     "lib": ["esnext"],
     "declaration": true,
