@@ -44,7 +44,7 @@ export const findOrDefault =
 
 /**
  * ```
- * (a, b) => r ~~> (b) => (a) => r
+ * (a) => (b) => r ~~> (b) => (a) => r
  * ```
  **/
 export const flip =
