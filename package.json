@@ -1,6 +1,6 @@
 {
   "name": "dd-nodom",
-  "version": "1.0.0-SNAPSHOT.2",
+  "version": "1.0.0-SNAPSHOT.3",
   "description": "Util library (no DOM code).",
   "main": "lib/index.js",
   "module": "lib/index.mjs",
