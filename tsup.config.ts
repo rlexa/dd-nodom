@@ -6,6 +6,7 @@ export default defineConfig({
     common: 'src/common/index.ts',
     date: 'src/date/index.ts',
     fp: 'src/fp/index.ts',
+    index: 'src/index.ts',
     str: 'src/str/index.ts',
   },
   clean: true,
