@@ -1,0 +1,38 @@
+{
+  "name": "dd-nodom",
+  "version": "1.0.0-SNAPSHOT.1",
+  "description": "Util library (no DOM code).",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "build:snapshot": "npm version --prefix . prerelease --preid SNAPSHOT && npm run build",
+    "publish:snapshot": "npm publish --access public --tag next --tag snapshot"
+  },
+  "keywords": [
+    "typescript",
+    "library"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rlexa/dd-nodom.git"
+  },
+  "author": "Alex Rempel",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rlexa/dd-nodom/issues"
+  },
+  "homepage": "https://github.com/rlexa/dd-nodom#readme",
+  "devDependencies": {
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  }
+}
