@@ -1,6 +1,6 @@
 {
   "name": "dd-nodom",
-  "version": "1.0.2-SNAPSHOT.3",
+  "version": "1.0.2",
   "description": "Util library (no DOM code).",
   "main": "index.js",
   "module": "index.mjs",
@@ -11,7 +11,8 @@
     "test": "vitest run",
     "publish:snapshot": "cd lib && npm publish --access public --tag next --tag snapshot",
     "postpublish:snapshot": "cd ..",
-    "publish": "npm publish --access public"
+    "publish": "cd lib && npm publish --access public",
+    "postpublish": "cd .."
   },
   "keywords": [
     "typescript",
