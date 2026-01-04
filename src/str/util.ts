@@ -1,11 +1,12 @@
 import {isNullUndefined} from '../common/util';
-import {flip} from '../fp/common';
+import {compose} from '../fp';
+import {coalesce, flip} from '../fp/common';
 
 // #region common
 
 /** stringifies  */
 export const str = (val: unknown) => (isNullUndefined(val) ? null : typeof val === 'string' ? val : String(val));
-export const strNonNull = (val: unknown) => str(val) ?? '';
+export const strNonNull = compose(coalesce(''), str);
 
 // #endregion
 // #region compare
@@ -23,7 +24,7 @@ export const strForIncludes = flip(strIncludes);
 // #endregion
 // #region pad
 
-export const strPadLeft = (padWith: string) => (max: number) => (val: string | null) => val?.padStart(max, padWith) ?? null;
+export const strPadLeft = (padWith: string) => (max: number) => (val: unknown) => strNonNull(val).padStart(max, padWith);
 export const strPadLeftWithZero = strPadLeft('0');
 export const strPadLeftWithZero2 = strPadLeftWithZero(2);
 export const strPadLeftWithZero4 = strPadLeftWithZero(4);

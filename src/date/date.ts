@@ -94,7 +94,7 @@ export const dateToUtcYearString = compose(strPadLeftWithZero4, str, dateToUtcYe
 export const dateToLocalYear = (val: Date) => val.getFullYear();
 
 /** year 920: "0920" */
-export const dateToLocalYearString = compose(strPadLeftWithZero4, str, dateToLocalYear);
+export const dateToLocalYearString = compose(strPadLeftWithZero4, dateToLocalYear);
 
 /** yyyy-mm-dd */
 export const dateToUtcDatePart = (val: Date) => joinDate([dateToUtcYearString(val), dateToUtcMonthString(val), dateToUtcDateString(val)]);
