@@ -14,10 +14,6 @@ import {
   asIsoDatePart,
   asIsoString,
   asLocalDatePart,
-  asLocalIsoWeek,
-  asLocalIsoWeekString,
-  asLocalIsoYear,
-  asLocalIsoYearWeek,
   asTimeValue,
   asUtcHhMmPart,
   dateCopy,
@@ -30,8 +26,6 @@ import {
   dateEndOfUtcSecond,
   dateEndOfUtcWorkWeek,
   dateEndOfUtcYear,
-  dateMoveToStartOfLocalIsoWeek,
-  dateStartOfLocalIsoYearWeek,
   dateStartOfUtcDay,
   dateStartOfUtcHalfYear,
   dateStartOfUtcHour,
@@ -51,7 +45,7 @@ import {
 } from './date';
 
 describe(`date`, () => {
-  test(`has main ms values`, () => {
+  it(`has main ms values`, () => {
     expect(msSecond).toBe(1000);
     expect(msMinute).toBe(1000 * 60);
     expect(msHour).toBe(1000 * 60 * 60);
@@ -60,136 +54,112 @@ describe(`date`, () => {
   });
 
   describe(`addDays`, () => {
-    test(`adds`, () => expect(addDays(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-02')));
+    it(`adds`, () => expect(addDays(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-02')));
 
-    test(`subs`, () => expect(addDays(-1)(asDate('2000-01-02'))).toStrictEqual(asDate('2000-01-01')));
+    it(`subs`, () => expect(addDays(-1)(asDate('2000-01-02'))).toStrictEqual(asDate('2000-01-01')));
 
-    test(`adds UTC`, () => expect(addUtcDays(1)(asDate('2000-01-01T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-02T00:00:00.000Z')));
+    it(`adds UTC`, () => expect(addUtcDays(1)(asDate('2000-01-01T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-02T00:00:00.000Z')));
 
-    test(`subs UTC`, () => expect(addUtcDays(-1)(asDate('2000-01-02T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-01T00:00:00.000Z')));
+    it(`subs UTC`, () => expect(addUtcDays(-1)(asDate('2000-01-02T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-01T00:00:00.000Z')));
   });
 
   describe(`addHours`, () => {
-    test(`adds`, () => expect(addHours(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T01:00:00')));
-    test(`subs`, () => expect(addHours(-1)(asDate('2000-01-01T01:00:00'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
+    it(`adds`, () => expect(addHours(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T01:00:00')));
+    it(`subs`, () => expect(addHours(-1)(asDate('2000-01-01T01:00:00'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
   });
 
   describe(`addMinutes`, () => {
-    test(`adds`, () => expect(addMinutes(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T00:01:00')));
-    test(`subs`, () => expect(addMinutes(-1)(asDate('2000-01-01T00:01:00'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
+    it(`adds`, () => expect(addMinutes(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T00:01:00')));
+    it(`subs`, () => expect(addMinutes(-1)(asDate('2000-01-01T00:01:00'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
   });
 
   describe(`addMs`, () => {
-    test(`adds`, () => expect(addMs(1)(asDate('2000-01-01T00:00:00.000'))).toStrictEqual(asDate('2000-01-01T00:00:00.001')));
-    test(`subs`, () => expect(addMs(-1)(asDate('2000-01-01T00:00:00.001'))).toStrictEqual(asDate('2000-01-01T00:00:00.000')));
+    it(`adds`, () => expect(addMs(1)(asDate('2000-01-01T00:00:00.000'))).toStrictEqual(asDate('2000-01-01T00:00:00.001')));
+    it(`subs`, () => expect(addMs(-1)(asDate('2000-01-01T00:00:00.001'))).toStrictEqual(asDate('2000-01-01T00:00:00.000')));
   });
 
   describe(`addSeconds`, () => {
-    test(`adds`, () => expect(addSeconds(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T00:00:01')));
-    test(`subs`, () => expect(addSeconds(-1)(asDate('2000-01-01T00:00:01'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
+    it(`adds`, () => expect(addSeconds(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T00:00:01')));
+    it(`subs`, () => expect(addSeconds(-1)(asDate('2000-01-01T00:00:01'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
   });
 
   describe(`addWeeks`, () => {
-    test(`adds`, () => expect(addWeeks(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-08')));
+    it(`adds`, () => expect(addWeeks(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-08')));
 
-    test(`subs`, () => expect(addWeeks(-1)(asDate('2000-01-08'))).toStrictEqual(asDate('2000-01-01')));
+    it(`subs`, () => expect(addWeeks(-1)(asDate('2000-01-08'))).toStrictEqual(asDate('2000-01-01')));
 
-    test(`adds UTC`, () => expect(addUtcWeeks(1)(asDate('2000-01-01T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-08T00:00:00.000Z')));
+    it(`adds UTC`, () => expect(addUtcWeeks(1)(asDate('2000-01-01T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-08T00:00:00.000Z')));
 
-    test(`subs UTC`, () => expect(addUtcWeeks(-1)(asDate('2000-01-08T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-01T00:00:00.000Z')));
+    it(`subs UTC`, () => expect(addUtcWeeks(-1)(asDate('2000-01-08T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-01T00:00:00.000Z')));
   });
 
   describe(`addUtcMonths`, () => {
-    test(`adds`, () => expect(addUtcMonths(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-02-01')));
-    test(`subs`, () => expect(addUtcMonths(-1)(asDate('2000-02-01'))).toStrictEqual(asDate('2000-01-01')));
+    it(`adds`, () => expect(addUtcMonths(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-02-01')));
+    it(`subs`, () => expect(addUtcMonths(-1)(asDate('2000-02-01'))).toStrictEqual(asDate('2000-01-01')));
   });
 
   describe(`addUtcYears`, () => {
-    test(`adds`, () => expect(addUtcYears(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2001-01-01')));
-    test(`subs`, () => expect(addUtcYears(-1)(asDate('2001-01-01'))).toStrictEqual(asDate('2000-01-01')));
+    it(`adds`, () => expect(addUtcYears(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2001-01-01')));
+    it(`subs`, () => expect(addUtcYears(-1)(asDate('2001-01-01'))).toStrictEqual(asDate('2000-01-01')));
   });
 
   describe(`asDate`, () => {
-    test(`transforms null to null`, () => expect(asDate(null)).toBeNull());
+    it(`transforms null to null`, () => expect(asDate(null)).toBeNull());
 
-    test(`transforms date to self`, () => {
+    it(`transforms date to self`, () => {
       const date = new Date(123);
       expect(asDate(date)).toBe(date);
     });
 
-    test(`transforms 123 to date`, () => expect(asDate(123)).toStrictEqual(new Date(123)));
+    it(`transforms 123 to date`, () => expect(asDate(123)).toStrictEqual(new Date(123)));
 
-    test(`transforms '2000-01-01T12:00:00Z' as is`, () =>
+    it(`transforms '2000-01-01T12:00:00Z' as is`, () =>
       expect(asDate('2000-01-01T12:00:00Z')).toStrictEqual(new Date('2000-01-01T12:00:00Z')));
 
-    test(`transforms '2000-01-01' to date assumed as local timezone`, () => {
+    it(`transforms '2000-01-01' to date assumed as local timezone`, () => {
       const date = new Date('2000-01-01');
       expect(asDate('2000-01-01')).toStrictEqual(new Date(date.getTime() + date.getTimezoneOffset() * 60_000));
     });
   });
 
   describe(`asIsoDate`, () => {
-    test(`transforms e.g. ms to iso`, () => expect(asIsoString(1234)).toBe('1970-01-01T00:00:01.234Z'));
+    it(`transforms e.g. ms to iso`, () => expect(asIsoString(1234)).toBe('1970-01-01T00:00:01.234Z'));
   });
 
   describe(`asIsoDatePart`, () => {
-    test(`transforms e.g. ms to date part`, () => expect(asIsoDatePart(1234)).toBe('1970-01-01'));
-  });
-
-  describe(`asIsoYearWeek/IsoYear/IsoWeek, asLocalIsoWeekString`, () => {
-    const fromTo = [
-      {from: '2005-01-02', week: 53, year: 2004, iso: '2004-W53'},
-      {from: '2005-12-31', week: 52, year: 2005, iso: '2005-W52'},
-      {from: '2006-01-01', week: 52, year: 2005, iso: '2005-W52'},
-      {from: '2006-01-02', week: 1, year: 2006, iso: '2006-W01'},
-      {from: '2007-01-01', week: 1, year: 2007, iso: '2007-W01'},
-      {from: '2010-01-03', week: 53, year: 2009, iso: '2009-W53'},
-      {from: '2023-01-01', week: 52, year: 2022, iso: '2022-W52'},
-      {from: '2023-01-08', week: 1, year: 2023, iso: '2023-W01'},
-      {from: '2024-01-07', week: 1, year: 2024, iso: '2024-W01'},
-    ];
-
-    fromTo.forEach(({from, year, week, iso}) => {
-      test(`transforms ${from} to year:week = ${year}:${week}`, () => expect(asLocalIsoYearWeek(from)).toStrictEqual([year, week]));
-
-      test(`transforms ${from} to week = ${week}`, () => expect(asLocalIsoWeek(from)).toBe(week));
-
-      test(`transforms ${from} to year = ${year}`, () => expect(asLocalIsoYear(from)).toBe(year));
-
-      test(`stringifies ${from} to iso = "${iso}"`, () => expect(asLocalIsoWeekString(from)).toBe(iso));
-    });
+    it(`transforms e.g. ms to date part`, () => expect(asIsoDatePart(1234)).toBe('1970-01-01'));
   });
 
   describe(`asLocalDatePart`, () => {
-    test(`transforms`, () => expect(asLocalDatePart('2025-01-01')).toBe('2025-01-01'));
+    it(`transforms`, () => expect(asLocalDatePart('2025-01-01')).toBe('2025-01-01'));
   });
 
   describe(`asTimeValue`, () => {
-    test(`transforms e.g. string to ms`, () => expect(asTimeValue('1970-01-01T00:00:01.234Z')).toBe(1234));
+    it(`transforms e.g. string to ms`, () => expect(asTimeValue('1970-01-01T00:00:01.234Z')).toBe(1234));
   });
 
   describe(`asUtcHhMmPart`, () => {
-    test(`transforms e.g. ms to date part`, () => expect(asUtcHhMmPart(1234)).toBe('00:00'));
+    it(`transforms e.g. ms to date part`, () => expect(asUtcHhMmPart(1234)).toBe('00:00'));
   });
 
   describe(`dateCopy`, () => {
-    test(`transforms date to copy`, () => expect(dateCopy(new Date(1))).toStrictEqual(new Date(1)));
+    it(`transforms date to copy`, () => expect(dateCopy(new Date(1))).toStrictEqual(new Date(1)));
   });
 
   describe(`dateEndOfUtc...`, () => {
-    test(`transforms with dateEndOfUtcSecond`, () =>
+    it(`transforms with dateEndOfUtcSecond`, () =>
       expect(dateEndOfUtcSecond(new Date(`2000-01-01T00:00:00.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.999Z`)));
 
-    test(`transforms with dateEndOfUtcMinute`, () =>
+    it(`transforms with dateEndOfUtcMinute`, () =>
       expect(dateEndOfUtcMinute(new Date(`2000-01-01T00:00:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:59.999Z`)));
 
-    test(`transforms with dateEndOfUtcHour`, () =>
+    it(`transforms with dateEndOfUtcHour`, () =>
       expect(dateEndOfUtcHour(new Date(`2000-01-01T00:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:59:59.999Z`)));
 
-    test(`transforms with dateEndOfUtcDay`, () =>
+    it(`transforms with dateEndOfUtcDay`, () =>
       expect(dateEndOfUtcDay(new Date(`2000-01-01T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T23:59:59.999Z`)));
 
-    test(`transforms with dateEndOfUtcWorkWeek`, () => {
+    it(`transforms with dateEndOfUtcWorkWeek`, () => {
       // fyi 2022-01-24 is monday
       expect(dateEndOfUtcWorkWeek(new Date(`2022-01-24T12:12:12.123Z`))).toStrictEqual(new Date(`2022-01-30T23:59:59.999Z`));
       expect(dateEndOfUtcWorkWeek(new Date(`2022-01-25T12:12:12.123Z`))).toStrictEqual(new Date(`2022-01-30T23:59:59.999Z`));
@@ -201,7 +171,7 @@ describe(`date`, () => {
       expect(dateEndOfUtcWorkWeek(new Date(`2022-01-31T12:12:12.123Z`))).toStrictEqual(new Date(`2022-02-06T23:59:59.999Z`));
     });
 
-    test(`transforms with dateEndOfUtcMonth`, () => {
+    it(`transforms with dateEndOfUtcMonth`, () => {
       expect(dateEndOfUtcMonth(new Date(`2000-01-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-31T23:59:59.999Z`));
       expect(dateEndOfUtcMonth(new Date(`2000-02-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-02-29T23:59:59.999Z`));
       expect(dateEndOfUtcMonth(new Date(`2000-03-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-03-31T23:59:59.999Z`));
@@ -216,48 +186,36 @@ describe(`date`, () => {
       expect(dateEndOfUtcMonth(new Date(`2000-12-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-12-31T23:59:59.999Z`));
     });
 
-    test(`transforms with dateEndOfUtcHalfYear`, () => {
+    it(`transforms with dateEndOfUtcHalfYear`, () => {
       expect(dateEndOfUtcHalfYear(new Date(`2000-03-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-06-30T23:59:59.999Z`));
       expect(dateEndOfUtcHalfYear(new Date(`2000-09-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-12-31T23:59:59.999Z`));
     });
 
-    test(`transforms with dateEndOfUtcQuarter`, () => {
+    it(`transforms with dateEndOfUtcQuarter`, () => {
       expect(dateEndOfUtcQuarter(new Date(`2000-02-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-03-31T23:59:59.999Z`));
       expect(dateEndOfUtcQuarter(new Date(`2000-05-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-06-30T23:59:59.999Z`));
       expect(dateEndOfUtcQuarter(new Date(`2000-08-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-09-30T23:59:59.999Z`));
       expect(dateEndOfUtcQuarter(new Date(`2000-11-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-12-31T23:59:59.999Z`));
     });
 
-    test(`transforms with dateEndOfUtcYear`, () =>
+    it(`transforms with dateEndOfUtcYear`, () =>
       expect(dateEndOfUtcYear(new Date(`2000-11-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-12-31T23:59:59.999Z`)));
   });
 
-  describe(`dateMoveToStartOfLocalIsoWeek`, () => {
-    test(`moves down`, () => expect(dateMoveToStartOfLocalIsoWeek(asDate('2025-07-17'))(28)).toStrictEqual(asDate('2025-07-07')));
-
-    test(`moves up`, () => expect(dateMoveToStartOfLocalIsoWeek(asDate('2025-07-17'))(32)).toStrictEqual(asDate('2025-08-04')));
-  });
-
-  describe(`dateStartOfLocalIsoYearWeek`, () => {
-    test(`transforms first`, () => expect(dateStartOfLocalIsoYearWeek([2025, 1])).toStrictEqual(asDate('2024-12-30')));
-    test(`transforms some`, () => expect(dateStartOfLocalIsoYearWeek([2025, 33])).toStrictEqual(asDate('2025-08-11')));
-    test(`transforms last`, () => expect(dateStartOfLocalIsoYearWeek([2025, 52])).toStrictEqual(asDate('2025-12-22')));
-  });
-
   describe(`dateStartOfUtc...`, () => {
-    test(`transforms with dateStartOfUtcSecond`, () =>
+    it(`transforms with dateStartOfUtcSecond`, () =>
       expect(dateStartOfUtcSecond(new Date(`2000-01-01T00:00:00.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
 
-    test(`transforms with dateStartOfUtcMinute`, () =>
+    it(`transforms with dateStartOfUtcMinute`, () =>
       expect(dateStartOfUtcMinute(new Date(`2000-01-01T00:00:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
 
-    test(`transforms with dateStartOfUtcHour`, () =>
+    it(`transforms with dateStartOfUtcHour`, () =>
       expect(dateStartOfUtcHour(new Date(`2000-01-01T00:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
 
-    test(`transforms with dateStartOfUtcDay`, () =>
+    it(`transforms with dateStartOfUtcDay`, () =>
       expect(dateStartOfUtcDay(new Date(`2000-01-01T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
 
-    test(`transforms with dateStartOfUtcWeek`, () => {
+    it(`transforms with dateStartOfUtcWeek`, () => {
       // fyi 2022-01-23 is sunday
       const result = new Date(`2022-01-23T00:00:00.000Z`);
       const resultPlusWeek = new Date(`2022-01-30T00:00:00.000Z`);
@@ -272,7 +230,7 @@ describe(`date`, () => {
       expect(dateStartOfUtcWeek(new Date(`2022-01-30T12:12:12.123Z`))).toStrictEqual(resultPlusWeek);
     });
 
-    test(`transforms with dateStartOfUtcWorkWeek`, () => {
+    it(`transforms with dateStartOfUtcWorkWeek`, () => {
       // fyi 2022-01-24 is monday
       const result = new Date(`2022-01-24T00:00:00.000Z`);
       const resultPlusWeek = new Date(`2022-01-31T00:00:00.000Z`);
@@ -287,46 +245,46 @@ describe(`date`, () => {
       expect(dateStartOfUtcWorkWeek(new Date(`2022-01-31T12:12:12.123Z`))).toStrictEqual(resultPlusWeek);
     });
 
-    test(`transforms with dateStartOfUtcMonth`, () =>
+    it(`transforms with dateStartOfUtcMonth`, () =>
       expect(dateStartOfUtcMonth(new Date(`2000-01-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
 
-    test(`transforms with dateStartOfUtcQuarter`, () => {
+    it(`transforms with dateStartOfUtcQuarter`, () => {
       expect(dateStartOfUtcQuarter(new Date(`2000-02-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`));
       expect(dateStartOfUtcQuarter(new Date(`2000-05-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-04-01T00:00:00.000Z`));
       expect(dateStartOfUtcQuarter(new Date(`2000-08-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-07-01T00:00:00.000Z`));
       expect(dateStartOfUtcQuarter(new Date(`2000-11-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-10-01T00:00:00.000Z`));
     });
 
-    test(`transforms with dateStartOfUtcHalfYear`, () => {
+    it(`transforms with dateStartOfUtcHalfYear`, () => {
       expect(dateStartOfUtcHalfYear(new Date(`2000-03-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`));
       expect(dateStartOfUtcHalfYear(new Date(`2000-09-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-07-01T00:00:00.000Z`));
     });
 
-    test(`transforms with dateStartOfUtcYear`, () =>
+    it(`transforms with dateStartOfUtcYear`, () =>
       expect(dateStartOfUtcYear(new Date(`2000-12-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
   });
 
   describe(`dateTo...Weekday`, () => {
     describe(`dateToIsoWeekday`, () => {
-      test('resolves Monday as 1', () => expect(dateToLocalIsoWeekday(asDate('2025-06-30'))).toBe(1));
-      test('resolves Sunday as 7', () => expect(dateToLocalIsoWeekday(asDate('2025-06-29'))).toBe(7));
+      it('resolves Monday as 1', () => expect(dateToLocalIsoWeekday(asDate('2025-06-30'))).toBe(1));
+      it('resolves Sunday as 7', () => expect(dateToLocalIsoWeekday(asDate('2025-06-29'))).toBe(7));
     });
 
     describe(`dateToUtcIsoWeekday`, () => {
-      test('resolves Monday as 1', () => expect(dateToUtcIsoWeekday(asDate('2025-06-30T14:00:00.000Z'))).toBe(1));
-      test('resolves Sunday as 7', () => expect(dateToUtcIsoWeekday(asDate('2025-06-29T14:00:00.000Z'))).toBe(7));
+      it('resolves Monday as 1', () => expect(dateToUtcIsoWeekday(asDate('2025-06-30T14:00:00.000Z'))).toBe(1));
+      it('resolves Sunday as 7', () => expect(dateToUtcIsoWeekday(asDate('2025-06-29T14:00:00.000Z'))).toBe(7));
     });
   });
 
   describe(`isLocalIsoWeekWorkDay`, () => {
-    test('friday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-04')).toBe(true));
-    test('saturday not work day', () => expect(isLocalIsoWeekWorkDay('2025-07-05')).toBe(false));
-    test('sunday not work day', () => expect(isLocalIsoWeekWorkDay('2025-07-06')).toBe(false));
-    test('monday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-07')).toBe(true));
+    it('friday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-04')).toBe(true));
+    it('saturday not work day', () => expect(isLocalIsoWeekWorkDay('2025-07-05')).toBe(false));
+    it('sunday not work day', () => expect(isLocalIsoWeekWorkDay('2025-07-06')).toBe(false));
+    it('monday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-07')).toBe(true));
   });
 
   describe(`isUtcWeekWorkDay`, () => {
-    test(`transforms correctly`, () =>
+    it(`transforms correctly`, () =>
       expect(
         Object.values(Weekday).every((_, ii) => {
           const date = new Date(ii * msDay);
@@ -339,14 +297,14 @@ describe(`date`, () => {
   });
 
   describe(`isoToHhMmPart`, () => {
-    test(`returns hh:mm for valid`, () => expect(isoToHhMmPart('2000-01-02T11:22.333Z')).toBe('11:22'));
+    it(`returns hh:mm for valid`, () => expect(isoToHhMmPart('2000-01-02T11:22.333Z')).toBe('11:22'));
   });
 
   describe(`isValidDate`, () => {
-    test(`validates date`, () => expect(isValidDate(new Date(Date.now()))).toBe(true));
-    test(`invalidates date`, () => expect(isValidDate(new Date('nope'))).toBe(false));
-    test(`invalidates non-date`, () => expect(isValidDate(true)).toBe(false));
-    test(`invalidates undefined`, () => expect(isValidDate(undefined)).toBe(false));
-    test(`invalidates null`, () => expect(isValidDate(null)).toBe(false));
+    it(`validates date`, () => expect(isValidDate(new Date(Date.now()))).toBe(true));
+    it(`invalidates date`, () => expect(isValidDate(new Date('nope'))).toBe(false));
+    it(`invalidates non-date`, () => expect(isValidDate(true)).toBe(false));
+    it(`invalidates undefined`, () => expect(isValidDate(undefined)).toBe(false));
+    it(`invalidates null`, () => expect(isValidDate(null)).toBe(false));
   });
 });

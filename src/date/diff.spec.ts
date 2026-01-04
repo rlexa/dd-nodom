@@ -98,20 +98,20 @@ describe('date diff', () => {
       const months = levels.find((ii) => ii.level === 'months')!.result.months;
       const years = levels.find((ii) => ii.level === 'years')!.result.years;
 
-      test(`${from} - ${to} = ${ms}ms`, () => expect(dateDiffMs(asDate(from))(asDate(to))).toBe(ms));
-      test(`${from} - ${to} = ${seconds}s`, () => expect(dateDiffSeconds(asDate(from))(asDate(to))).toBe(seconds));
-      test(`${from} - ${to} = ${minutes}m`, () => expect(dateDiffMinutes(asDate(from))(asDate(to))).toBe(minutes));
-      test(`${from} - ${to} = ${hours}h`, () => expect(dateDiffHours(asDate(from))(asDate(to))).toBe(hours));
-      test(`${from} - ${to} = ${days}d`, () => expect(dateDiffDays(asDate(from))(asDate(to))).toBe(days));
-      test(`${from} - ${to} = ${weeks}w`, () => expect(dateDiffWeeks(asDate(from))(asDate(to))).toBe(weeks));
-      test(`${from} - ${to} = ${months}mo`, () => expect(dateDiffMonths(asDate(from))(asDate(to))).toBe(months));
-      test(`${from} - ${to} = ${years}y`, () => expect(dateDiffYears(asDate(from))(asDate(to))).toBe(years));
+      it(`${from} - ${to} = ${ms}ms`, () => expect(dateDiffMs(asDate(from))(asDate(to))).toBe(ms));
+      it(`${from} - ${to} = ${seconds}s`, () => expect(dateDiffSeconds(asDate(from))(asDate(to))).toBe(seconds));
+      it(`${from} - ${to} = ${minutes}m`, () => expect(dateDiffMinutes(asDate(from))(asDate(to))).toBe(minutes));
+      it(`${from} - ${to} = ${hours}h`, () => expect(dateDiffHours(asDate(from))(asDate(to))).toBe(hours));
+      it(`${from} - ${to} = ${days}d`, () => expect(dateDiffDays(asDate(from))(asDate(to))).toBe(days));
+      it(`${from} - ${to} = ${weeks}w`, () => expect(dateDiffWeeks(asDate(from))(asDate(to))).toBe(weeks));
+      it(`${from} - ${to} = ${months}mo`, () => expect(dateDiffMonths(asDate(from))(asDate(to))).toBe(months));
+      it(`${from} - ${to} = ${years}y`, () => expect(dateDiffYears(asDate(from))(asDate(to))).toBe(years));
 
       levels.forEach(({level, result}) => {
         const negateNumbers = (obj: object) =>
           Object.entries(obj).reduce((acc, [key, val]) => ({...acc, [key]: typeof val === 'number' ? -val : val}), {});
 
-        test(`${from} - ${to} => returns level "${level}"`, () => {
+        it(`${from} - ${to} => returns level "${level}"`, () => {
           expect(dateDiffMsDurationLevel(level)(dateDiffMs(asDate(from))(asDate(to)))).toStrictEqual(result);
 
           expect(dateDiffMsDurationLevel(level)(dateDiffMs(asDate(to))(asDate(from)))).toStrictEqual(negateNumbers(result));

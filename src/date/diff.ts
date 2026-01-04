@@ -59,7 +59,6 @@ export function dateDiffMsDurationLevel(level: DateDiffLevel): (msDiff: number) 
   months?: number;
   years?: number;
 };
-// eslint-disable-next-line max-lines-per-function
 export function dateDiffMsDurationLevel(level: DateDiffLevel): (msDiff: number) => {
   level: DateDiffLevel;
   ms: number;

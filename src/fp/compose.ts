@@ -83,7 +83,6 @@ export function compose(...fns: ((arg: unknown) => unknown)[]) {
   return (arg0: unknown): unknown =>
     fns.reduceRight((acc, fn, index) => {
       if ('function' !== typeof fn) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         throw new Error(`Found a non-function (${typeof fn}: ${fn as any}) at ${index}.`);
       }
       return fn(acc);

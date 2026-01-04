@@ -1,8 +1,12 @@
-export const jsonCopy = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
+export function isNullUndefined<T>(val: T | null | undefined): val is null | undefined {
+  return !notNullUndefined(val);
+}
 
-export const jsonEqual = <T>(aa: T, bb: T): boolean => aa === bb || JSON.stringify(aa) === JSON.stringify(bb);
+export function jsonCopy<T>(value: T) {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
 
-export const jsonDiff = <T>(oldObj: T, newObj: T): Record<string, {oldValue: unknown; newValue: unknown}> => {
+export function jsonDiff<T>(oldObj: T, newObj: T): Record<string, {oldValue: unknown; newValue: unknown}> {
   if (oldObj === newObj) {
     return {};
   }
@@ -27,8 +31,12 @@ export const jsonDiff = <T>(oldObj: T, newObj: T): Record<string, {oldValue: unk
   });
 
   return differences;
-};
+}
 
-export const notNullUndefined = <T>(val: T | null | undefined): val is T => null !== val && val !== undefined;
+export function jsonEqual<T>(aa: T, bb: T) {
+  return aa === bb || JSON.stringify(aa) === JSON.stringify(bb);
+}
 
-export const isNullUndefined = <T>(val: T | null | undefined): val is null | undefined => !notNullUndefined(val);
+export function notNullUndefined<T>(val: T | null | undefined): val is T {
+  return null !== val && val !== undefined;
+}

@@ -51,11 +51,7 @@ export const formatStyledLocalizedDuration =
     );
 
     try {
-      // eslint-disable-next-line max-len
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
       if ('DurationFormat' in Intl && (Intl as any).DurationFormat.supportedLocalesOf([locale])) {
-        // eslint-disable-next-line max-len
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
         return new (Intl as any).DurationFormat(locale, {style}).format(duration) as string;
       }
     } catch {
