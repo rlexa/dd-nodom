@@ -1,5 +1,12 @@
-import {avgDaysPerMonth, avgDaysPerYear, msDay, msHour, msMinute, msSecond, msWeek} from './const';
+import {avgDaysPerMonth, avgDaysPerYear, DateDiffLevel, msDay, msHour, msMinute, msSecond, msWeek} from './const';
 import {
+  dateDurationDays,
+  dateDurationHours,
+  dateDurationLevel,
+  dateDurationMinutes,
+  dateDurationMs,
+  dateDurationSeconds,
+  dateDurationWeeks,
   formatShortDurationUpToHours,
   formatStyledLocalizedDuration,
   formatStyledLocalizedShortestDuration,
@@ -7,6 +14,70 @@ import {
 } from './duration';
 
 describe(`date duration`, () => {
+  describe(`dateDuration`, () => {
+    const diffs: {
+      durationMs: number;
+      levels: {level: DateDiffLevel; result: ReturnType<ReturnType<typeof dateDurationLevel>>}[];
+    }[] = [
+      {
+        durationMs: 123,
+        levels: [
+          {level: 'ms', result: {level: 'ms', ms: 123}},
+          {level: 'seconds', result: {level: 'seconds', ms: 123, seconds: 0}},
+          {level: 'minutes', result: {level: 'minutes', ms: 123, seconds: 0, minutes: 0}},
+          {level: 'hours', result: {level: 'hours', ms: 123, seconds: 0, minutes: 0, hours: 0}},
+          {level: 'days', result: {level: 'days', ms: 123, seconds: 0, minutes: 0, hours: 0, days: 0}},
+          {level: 'weeks', result: {level: 'weeks', ms: 123, seconds: 0, minutes: 0, hours: 0, days: 0, weeks: 0}},
+        ],
+      },
+      {
+        durationMs: 52 * msWeek + 6 * msDay + 23 * msHour + 59 * msMinute + 58 * msSecond + 999,
+        levels: [
+          {level: 'ms', result: {level: 'ms', ms: ((((52 * 7 + 6) * 24 + 23) * 60 + 59) * 60 + 58) * 1000 + 999}},
+          {
+            level: 'seconds',
+            result: {level: 'seconds', ms: 999, seconds: (((52 * 7 + 6) * 24 + 23) * 60 + 59) * 60 + 58},
+          },
+          {
+            level: 'minutes',
+            result: {level: 'minutes', ms: 999, seconds: 58, minutes: ((52 * 7 + 6) * 24 + 23) * 60 + 59},
+          },
+          {
+            level: 'hours',
+            result: {level: 'hours', ms: 999, seconds: 58, minutes: 59, hours: (52 * 7 + 6) * 24 + 23},
+          },
+          {level: 'days', result: {level: 'days', ms: 999, seconds: 58, minutes: 59, hours: 23, days: 52 * 7 + 6}},
+          {
+            level: 'weeks',
+            result: {level: 'weeks', ms: 999, seconds: 58, minutes: 59, hours: 23, days: 6, weeks: 52},
+          },
+        ],
+      },
+    ];
+
+    diffs.forEach(({durationMs, levels}) => {
+      const seconds = levels.find((ii) => ii.level === 'seconds')!.result.seconds;
+      const minutes = levels.find((ii) => ii.level === 'minutes')!.result.minutes;
+      const hours = levels.find((ii) => ii.level === 'hours')!.result.hours;
+      const days = levels.find((ii) => ii.level === 'days')!.result.days;
+      const weeks = levels.find((ii) => ii.level === 'weeks')!.result.weeks;
+
+      test(`${durationMs}ms => ${durationMs}ms`, () => expect(dateDurationMs(durationMs)).toBe(durationMs));
+      test(`${durationMs}ms => ${seconds}m`, () => expect(dateDurationSeconds(durationMs)).toBe(seconds));
+      test(`${durationMs}ms => ${minutes}m`, () => expect(dateDurationMinutes(durationMs)).toBe(minutes));
+      test(`${durationMs}ms => ${hours}h`, () => expect(dateDurationHours(durationMs)).toBe(hours));
+      test(`${durationMs}ms => ${days}h`, () => expect(dateDurationDays(durationMs)).toBe(days));
+      test(`${durationMs}ms => ${weeks}h`, () => expect(dateDurationWeeks(durationMs)).toBe(weeks));
+
+      levels.forEach(({level, result}) => {
+        test(`${durationMs}ms => returns level "${level}"`, () => expect(dateDurationLevel(level)(durationMs)).toStrictEqual(result));
+      });
+    });
+
+    test(`floors positive e.g. seconds value`, () => expect(dateDurationSeconds(msSecond + 123)).toBe(1));
+    test(`floors negative e.g. seconds value`, () => expect(dateDurationSeconds(-msSecond - 123)).toBe(-1));
+  });
+
   describe(`formatDurationUpToHours`, () => {
     test(`transforms`, () =>
       expect(

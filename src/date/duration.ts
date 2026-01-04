@@ -1,9 +1,31 @@
 import {arrayFilterNotEmpty, arrayJoin, arrayReduce} from '../array';
-import {compose} from '../fp';
-import {avgDaysPerMonth, avgDaysPerYear, DateDiffLevel, msDay} from './const';
-import {dateDiffMsDurationLevel, removeDateDiffLevels} from './date';
+import {compose, flip} from '../fp';
+import {avgDaysPerMonth, avgDaysPerYear, DateDiffLevel, dateZero, msDay} from './const';
+import {asDateNonNull} from './date';
+import {
+  dateDiffDays,
+  dateDiffHours,
+  dateDiffMinutes,
+  dateDiffMonths,
+  dateDiffMs,
+  dateDiffMsDurationLevel,
+  dateDiffSeconds,
+  dateDiffWeeks,
+  dateDiffYears,
+  removeDateDiffLevels,
+} from './diff';
 
 type AllKeysOfType<T> = T extends T ? keyof T : never;
+
+export const dateDurationMs = compose(flip(dateDiffMs)(dateZero), asDateNonNull);
+export const dateDurationLevel = (level: DateDiffLevel) => compose(dateDiffMsDurationLevel(level), dateDurationMs);
+export const dateDurationSeconds = compose(flip(dateDiffSeconds)(dateZero), asDateNonNull);
+export const dateDurationMinutes = compose(flip(dateDiffMinutes)(dateZero), asDateNonNull);
+export const dateDurationHours = compose(flip(dateDiffHours)(dateZero), asDateNonNull);
+export const dateDurationDays = compose(flip(dateDiffDays)(dateZero), asDateNonNull);
+export const dateDurationWeeks = compose(flip(dateDiffWeeks)(dateZero), asDateNonNull);
+export const dateDurationMonths = compose(flip(dateDiffMonths)(dateZero), asDateNonNull);
+export const dateDurationYears = compose(flip(dateDiffYears)(dateZero), asDateNonNull);
 
 export type LocalizeFormatDurationStyle = 'long' | 'short' | 'narrow' | 'digital';
 export type LocalizeFormatDurationValue =
