@@ -2,11 +2,11 @@
   "name": "dd-nodom",
   "version": "1.0.0-SNAPSHOT.1",
   "description": "Util library (no DOM code).",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
   "files": [
-    "dist"
+    "lib"
   ],
   "scripts": {
     "build": "tsup",
