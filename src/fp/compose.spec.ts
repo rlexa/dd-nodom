@@ -1,6 +1,6 @@
 import {compose} from './compose';
 
-describe(`compose`, () => {
+describe(`fp compose`, () => {
   const returnSelf = <T>(arg: T) => arg;
   const plusOne = (nr: number) => nr + 1;
   const stringify = (arg: unknown) => String(arg);

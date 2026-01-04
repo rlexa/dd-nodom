@@ -3,12 +3,13 @@
  *
  * @example
  * ```
- * const plusOne = (nr: number) => nr + 1;
  * const double = (nr: number) => nr * 2;
+ * const increment = (nr: number) => nr + 1;
  * const stringify = (arg: unknown) => String(arg);
- * const plusOneDoubleStringify = compose(stringify, double, plusOne);
- * plusOneDoubleStringify(1); // => '4'
- * plusOneDoubleStringify(3); // => '8'
+ *
+ * const incrementDoubleStringify = compose(stringify, double, increment);
+ * incrementDoubleStringify(1); // => '4'
+ * incrementDoubleStringify(3); // => '8'
  * ```
  */
 export function compose<R, T0>(fn0: (arg: T0) => R): (arg: T0) => R;
