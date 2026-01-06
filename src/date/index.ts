@@ -11,4 +11,5 @@ export * from './month';
 export * from './ms';
 export * from './parse';
 export * from './second';
+export * from './stringify';
 export * from './year';

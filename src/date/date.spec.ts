@@ -9,11 +9,7 @@ import {
   addUtcWeeks,
   addUtcYears,
   addWeeks,
-  asIso,
-  asIsoDatePart,
-  asLocalDatePart,
   asTimeValue,
-  asUtcHhMmPart,
   dateEndOfUtcDay,
   dateEndOfUtcHalfYear,
   dateEndOfUtcHour,
@@ -35,7 +31,6 @@ import {
   dateStartOfUtcYear,
   dateToLocalIsoWeekday,
   dateToUtcIsoWeekday,
-  isoToHhMmPart,
 } from './date';
 import {asDate} from './parse';
 
@@ -90,24 +85,8 @@ describe(`date`, () => {
     it(`subs`, () => expect(addUtcYears(-1)(asDate('2001-01-01'))).toStrictEqual(asDate('2000-01-01')));
   });
 
-  describe(`asIsoDate`, () => {
-    it(`transforms e.g. ms to iso`, () => expect(asIso(1234)).toBe('1970-01-01T00:00:01.234Z'));
-  });
-
-  describe(`asIsoDatePart`, () => {
-    it(`transforms e.g. ms to date part`, () => expect(asIsoDatePart(1234)).toBe('1970-01-01'));
-  });
-
-  describe(`asLocalDatePart`, () => {
-    it(`transforms`, () => expect(asLocalDatePart('2025-01-01')).toBe('2025-01-01'));
-  });
-
   describe(`asTimeValue`, () => {
     it(`transforms e.g. string to ms`, () => expect(asTimeValue('1970-01-01T00:00:01.234Z')).toBe(1234));
-  });
-
-  describe(`asUtcHhMmPart`, () => {
-    it(`transforms e.g. ms to date part`, () => expect(asUtcHhMmPart(1234)).toBe('00:00'));
   });
 
   describe(`dateEndOfUtc...`, () => {
@@ -238,9 +217,5 @@ describe(`date`, () => {
       it('resolves Monday as 1', () => expect(dateToUtcIsoWeekday(asDate('2025-06-30T14:00:00.000Z'))).toBe(1));
       it('resolves Sunday as 7', () => expect(dateToUtcIsoWeekday(asDate('2025-06-29T14:00:00.000Z'))).toBe(7));
     });
-  });
-
-  describe(`isoToHhMmPart`, () => {
-    it(`returns hh:mm for valid`, () => expect(isoToHhMmPart('2000-01-02T11:22.333Z')).toBe('11:22'));
   });
 });
