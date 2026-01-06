@@ -52,6 +52,21 @@ _FYI_ Most operators have an additional `as`-prefixed variant which can be appli
 
 _FYI_ operators with `Local` infix always have an additional `Utc` variant e.g. `dateToLocalDatePart` and `dateToUtcDatePart`.
 
+### Building own operators
+
+Most operators in the library are based on function composition and partial application. You can build your own operators based on the same principles. For example the operator `dateMoveToEndOfLocalYear` is implemented as:
+
+```typescript
+// const dateMoveToEndOfLocalYear: (arg: Date) => Date
+export const dateMoveToEndOfLocalYear = compose(addLocalMs(-1), addLocalYears(1), dateMoveToStartOfLocalYear);
+```
+
+- `compose` builds a function which applies the handlers inside to an incoming argument from right to left:
+  - from incoming date move to start of year
+  - add 1 year
+  - subtract a single millisecond
+  - result: end of year
+
 ### Util
 
 | name            | info                    |
@@ -86,6 +101,34 @@ _FYI_ when using `compose` prefer using `asDateNonNull` over `asDate` for better
 | `asDate`        | parses as `Date` instance or `null`         |
 | `asDateNonNull` | parses as `Date` instance, throws if `null` |
 | `dateCopy`      |                                             |
+
+### Getter
+
+| name                        | info                              | as...   | Utc     |
+| --------------------------- | --------------------------------- | ------- | ------- |
+| `dateToTimeValue`           | `Date` javascript ms value        | &check; |         |
+| `dateToLocalMs`             | milliseconds (0-999)              |         | &check; |
+| `dateToLocalMsString`       | milliseconds (`"000"`-`"999"`)    | &check; | &check; |
+| `dateToLocalSeconds`        | seconds (0-59)                    |         | &check; |
+| `dateToLocalSecondsString`  | seconds (`"00"`-`"59"`)           | &check; | &check; |
+| `dateToLocalMinutes`        | minutes (0-59)                    |         | &check; |
+| `dateToLocalMinutesString`  | minutes (`"00"`-`"59"`)           | &check; | &check; |
+| `dateToLocalHours`          | hours (0-23)                      |         | &check; |
+| `dateToLocalHoursString`    | hours (`"00"`-`"23"`)             | &check; | &check; |
+| `dateToLocalWeekday`        | Su-Sa: 0-6                        | &check; | &check; |
+| `dateToLocalDayDate`        | date of the month (1-31)          | &check; | &check; |
+| `dateToLocalDayDateString`  | date of the month (`"01"`-`"31"`) | &check; | &check; |
+| `isWeekendDay`              | Su-Sa: 0-6                        |         |         |
+| `dateIsLocalWeekendDay`     | Su-Sa: 0-6                        | &check; | &check; |
+| `isWeekWorkDay`             | Su-Sa: 0-6                        |         |         |
+| `dateIsLocalWeekWorkDay`    | Su-Sa: 0-6                        | &check; | &check; |
+| `dateToLocalIsoWeekday`     | Mo-Su: 1-7                        | &check; | &check; |
+| `isIsoWeekWorkDay`          | Mo-Su: 1-7                        |         |         |
+| `dateIsLocalIsoWeekWorkDay` | Mo-Su: 1-7                        | &check; | &check; |
+| `dateToLocalMonth`          | month (1-12)                      |         |         |
+| `dateToLocalMonthString`    | month (`"01"`-`"12"`)             | &check; | &check; |
+| `dateToLocalYear`           | full year                         |         | &check; |
+| `dateToLocalYearString`     | full year (e.g. `"0980"`)         | &check; | &check; |
 
 ### Stringify
 
@@ -124,6 +167,26 @@ _FYI_ when using `compose` prefer using `asDateNonNull` over `asDate` for better
 | `dateDiffMonths`          |                                 |
 | `dateDiffYears`           |                                 |
 
+### Duration
+
+_FYI_ Uses `Intl` API or a non-flexible fallback.
+
+| name                         | info                                        |
+| ---------------------------- | ------------------------------------------- |
+| `dateDurationLevel`          | returns object with duration values         |
+| `dateDurationMs`             |                                             |
+| `dateDurationSeconds`        |                                             |
+| `dateDurationMinutes`        |                                             |
+| `dateDurationHours`          |                                             |
+| `dateDurationDays`           |                                             |
+| `dateDurationWeeks`          |                                             |
+| `dateDurationMonths`         |                                             |
+| `dateDurationYears`          |                                             |
+| `DurationFormat`             | (type) format mode                          |
+| `stringifyDuration`          | see also prepared `DurationFormat` variants |
+| `stringifyShortestDuration`  | see also prepared `DurationFormat` variants |
+| `stringifyDurationUpToHours` | see also prepared `DurationFormat` variants |
+
 ### ISO Year Week
 
 | name                            | info                                                | as...   | Utc |
@@ -134,6 +197,55 @@ _FYI_ when using `compose` prefer using `asDateNonNull` over `asDate` for better
 | `dateToLocalIsoWeekString`      | `2000-W01` ISO format                               | &check; |     |
 | `dateMoveToStartOfLocalIsoWeek` | using a reference `Date` moves to start of ISO week |         |     |
 | `dateStartOfLocalIsoYearWeek`   | `[year, week]` to start of week as `Date`           |         |     |
+
+### Mutate
+
+_FYI_ All operators use immutability approach except for explicit `dateMutate` function.
+
+#### Based on ms value (adds as duration)
+
+These operators add value as duration (not usable for calendar based semantic mutations).
+
+| name         | info |
+| ------------ | ---- |
+| `addMs`      |      |
+| `addSeconds` |      |
+| `addMinutes` |      |
+| `addHours`   |      |
+| `addDays`    |      |
+| `addWeeks`   |      |
+
+#### Based on semantic value
+
+These operators add calendar based value semantically (not usable for duration mutations).
+
+| name              | info | Utc     |
+| ----------------- | ---- | ------- |
+| `addLocalMs`      |      | &check; |
+| `addLocalSeconds` |      | &check; |
+| `addLocalMinutes` |      | &check; |
+| `addLocalHours`   |      | &check; |
+| `addLocalDays`    |      | &check; |
+| `addLocalWeeks`   |      | &check; |
+| `addLocalMonths`  |      | &check; |
+| `addLocalYears`   |      | &check; |
+
+#### Moving
+
+_FYI_ These operators have `MoveToStart` and `MoveToEnd` infix variants.
+
+| name                             | info                   | ToEnd   | Utc     |
+| -------------------------------- | ---------------------- | ------- | ------- |
+| `dateMoveToStartOfLocalSecond`   |                        | &check; | &check; |
+| `dateMoveToStartOfLocalMinute`   |                        | &check; | &check; |
+| `dateMoveToStartOfLocalHour`     |                        | &check; | &check; |
+| `dateMoveToStartOfLocalDay`      |                        | &check; | &check; |
+| `dateMoveToStartOfLocalWeek`     | starts with Sunday (0) | &check; | &check; |
+| `dateMoveToStartOfLocalWorkWeek` | starts with Monday (1) | &check; | &check; |
+| `dateMoveToStartOfLocalMonth`    |                        | &check; | &check; |
+| `dateMoveToStartOfLocalQuarter`  |                        | &check; | &check; |
+| `dateMoveToStartOfLocalHalfYear` |                        | &check; | &check; |
+| `dateMoveToStartOfLocalYear`     |                        | &check; | &check; |
 
 ## /fp
 
