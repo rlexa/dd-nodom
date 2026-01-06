@@ -1,6 +1,6 @@
 import {compose} from '../fp/compose';
 import {add, mult} from '../fp/math';
-import {msDay, msHour, msMinute, msSecond} from './const';
+import {msDay, msHour, msMinute, msSecond, Weekday} from './const';
 import {asTimeValue} from './ms';
 import {asDateNonNull, dateCopy} from './parse';
 
@@ -67,5 +67,105 @@ export const addUtcMonths = (months: number) => dateMutate((date) => date.setUTC
 export const addLocalYears = (years: number) => dateMutate((date) => date.setFullYear(date.getFullYear() + years));
 /** `addUtcYears(years)(date)`, immutable, **CAUTION** adds semantically */
 export const addUtcYears = (years: number) => dateMutate((date) => date.setUTCFullYear(date.getUTCFullYear() + years));
+
+// #endregion
+
+// #region move
+
+export const dateMoveToStartOfLocalSecond = dateMutate((date) => date.setMilliseconds(0));
+export const dateMoveToStartOfUtcSecond = dateMutate((date) => date.setUTCMilliseconds(0));
+
+export const dateMoveToStartOfLocalMinute = dateMutate((date) => date.setSeconds(0, 0));
+export const dateMoveToStartOfUtcMinute = dateMutate((date) => date.setUTCSeconds(0, 0));
+
+export const dateMoveToStartOfLocalHour = dateMutate((date) => date.setMinutes(0, 0, 0));
+export const dateMoveToStartOfUtcHour = dateMutate((date) => date.setUTCMinutes(0, 0, 0));
+
+export const dateMoveToStartOfLocalDay = dateMutate((date) => date.setHours(0, 0, 0, 0));
+export const dateMoveToStartOfUtcDay = dateMutate((date) => date.setUTCHours(0, 0, 0, 0));
+
+/** week starts with Sunday (0) */
+export function dateMoveToStartOfLocalWeek(val: Date) {
+  const date = addLocalDays(val.getDay() ? Weekday.Sunday - val.getDay() : 0)(val);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+/** week starts with Sunday (0) */
+export function dateMoveToStartOfUtcWeek(val: Date) {
+  const date = addUtcDays(val.getUTCDay() ? Weekday.Sunday - val.getUTCDay() : 0)(val);
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+}
+
+/** week starts with Monday (1) */
+export function dateMoveToStartOfLocalWorkWeek(val: Date) {
+  const date = addLocalDays(val.getDay() ? Weekday.Monday - val.getDay() : -6)(val);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+/** week starts with Monday (1) */
+export function dateMoveToStartOfUtcWorkWeek(val: Date) {
+  const date = addUtcDays(val.getUTCDay() ? Weekday.Monday - val.getUTCDay() : -6)(val);
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+}
+
+export const dateMoveToStartOfLocalMonth = dateMutate((date) => {
+  date.setDate(1);
+  date.setHours(0, 0, 0, 0);
+});
+export const dateMoveToStartOfUtcMonth = dateMutate((date) => {
+  date.setUTCDate(1);
+  date.setUTCHours(0, 0, 0, 0);
+});
+
+export const dateMoveToStartOfLocalQuarter = dateMutate((date) => {
+  date.setMonth(Math.floor(date.getMonth() / 3) * 3, 1);
+  date.setHours(0, 0, 0, 0);
+});
+export const dateMoveToStartOfUtcQuarter = dateMutate((date) => {
+  date.setUTCMonth(Math.floor(date.getUTCMonth() / 3) * 3, 1);
+  date.setUTCHours(0, 0, 0, 0);
+});
+
+export const dateMoveToStartOfLocalHalfYear = dateMutate((date) => {
+  date.setMonth(Math.floor(date.getMonth() / 6) * 6, 1);
+  date.setHours(0, 0, 0, 0);
+});
+export const dateMoveToStartOfUtcHalfYear = dateMutate((date) => {
+  date.setUTCMonth(Math.floor(date.getUTCMonth() / 6) * 6, 1);
+  date.setUTCHours(0, 0, 0, 0);
+});
+
+export const dateMoveToStartOfLocalYear = dateMutate((date) => {
+  date.setMonth(0, 1);
+  date.setHours(0, 0, 0, 0);
+});
+export const dateMoveToStartOfUtcYear = dateMutate((date) => {
+  date.setUTCMonth(0, 1);
+  date.setUTCHours(0, 0, 0, 0);
+});
+
+export const dateMoveToEndOfLocalSecond = compose(addLocalMs(-1), addLocalSeconds(1), dateMoveToStartOfLocalSecond);
+export const dateMoveToEndOfLocalMinute = compose(addLocalMs(-1), addLocalMinutes(1), dateMoveToStartOfLocalMinute);
+export const dateMoveToEndOfLocalHour = compose(addLocalMs(-1), addLocalHours(1), dateMoveToStartOfLocalHour);
+export const dateMoveToEndOfLocalDay = compose(addLocalMs(-1), addLocalDays(1), dateMoveToStartOfLocalDay);
+export const dateMoveToEndOfLocalWeek = compose(addLocalMs(-1), addLocalWeeks(1), dateMoveToStartOfLocalWeek);
+export const dateMoveToEndOfLocalWorkWeek = compose(addLocalMs(-1), addLocalWeeks(1), dateMoveToStartOfLocalWorkWeek);
+export const dateMoveToEndOfLocalMonth = compose(addLocalMs(-1), addLocalMonths(1), dateMoveToStartOfLocalMonth);
+export const dateMoveToEndOfLocalQuarter = compose(addLocalMs(-1), addLocalMonths(3), dateMoveToStartOfLocalQuarter);
+export const dateMoveToEndOfLocalHalfYear = compose(addLocalMs(-1), addLocalMonths(6), dateMoveToStartOfLocalHalfYear);
+export const dateMoveToEndOfLocalYear = compose(addLocalMs(-1), addLocalYears(1), dateMoveToStartOfLocalYear);
+
+export const dateMoveToEndOfUtcSecond = compose(addUtcMs(-1), addUtcSeconds(1), dateMoveToStartOfUtcSecond);
+export const dateMoveToEndOfUtcMinute = compose(addUtcMs(-1), addUtcMinutes(1), dateMoveToStartOfUtcMinute);
+export const dateMoveToEndOfUtcHour = compose(addUtcMs(-1), addUtcHours(1), dateMoveToStartOfUtcHour);
+export const dateMoveToEndOfUtcDay = compose(addUtcMs(-1), addUtcDays(1), dateMoveToStartOfUtcDay);
+export const dateMoveToEndOfUtcWeek = compose(addUtcMs(-1), addUtcWeeks(1), dateMoveToStartOfUtcWeek);
+export const dateMoveToEndOfUtcWorkWeek = compose(addUtcMs(-1), addUtcWeeks(1), dateMoveToStartOfUtcWorkWeek);
+export const dateMoveToEndOfUtcMonth = compose(addUtcMs(-1), addUtcMonths(1), dateMoveToStartOfUtcMonth);
+export const dateMoveToEndOfUtcQuarter = compose(addUtcMs(-1), addUtcMonths(3), dateMoveToStartOfUtcQuarter);
+export const dateMoveToEndOfUtcHalfYear = compose(addUtcMs(-1), addUtcMonths(6), dateMoveToStartOfUtcHalfYear);
+export const dateMoveToEndOfUtcYear = compose(addUtcMs(-1), addUtcYears(1), dateMoveToStartOfUtcYear);
 
 // #endregion

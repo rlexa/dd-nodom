@@ -2,8 +2,7 @@ import {arrayJoin} from '../array';
 import {compose} from '../fp';
 import {strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
 import {msWeek, Weekday} from './const';
-import {dateStartOfLocalWorkWeek} from './date';
-import {addLocalWeeks} from './mutate';
+import {addLocalWeeks, dateMoveToStartOfLocalWorkWeek} from './mutate';
 import {asDate, asDateNonNull} from './parse';
 
 const joinIsoYearWeek = arrayJoin('-W');
@@ -40,7 +39,7 @@ export function dateToLocalIsoWeekString(val: Date) {
 
 /** Moves the `reference` point Date to start of `week` ISO week number. */
 export const dateMoveToStartOfLocalIsoWeek = (reference: Date) => (week: number) =>
-  dateStartOfLocalWorkWeek(addLocalWeeks(week - dateToLocalIsoWeek(reference))(reference));
+  dateMoveToStartOfLocalWorkWeek(addLocalWeeks(week - dateToLocalIsoWeek(reference))(reference));
 
 export const dateStartOfLocalIsoYearWeek = (isoYearWeek: [year: number, week: number]) =>
   dateMoveToStartOfLocalIsoWeek(asDate(`${isoYearWeek[0]}-01-15`))(isoYearWeek[1]);
