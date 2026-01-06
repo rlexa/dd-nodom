@@ -1,95 +1,40 @@
 import {arrayForInclude, arrayJoin} from '../array/util';
 import {add, compose, mult, not} from '../fp';
-import {str, strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
+import {strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
 import {IsoWeekday, msHour, msMinute, msSecond, Weekday} from './const';
+import {dateToLocalDayDateString, dateToUtcDayDateString} from './day';
+import {asDateNonNull, dateCopy} from './parse';
 
 const joinDate = arrayJoin('-');
 const joinDateTime = arrayJoin('T');
 const joinTime = arrayJoin(':');
 
-export const isWeekendDay = arrayForInclude([Weekday.Saturday, Weekday.Sunday]);
-export const isNotWeekendDay = compose(not, isWeekendDay);
-
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link isWeekendDay} */
-export const isIsoWeekendDay = arrayForInclude([IsoWeekday.Saturday, IsoWeekday.Sunday]);
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link isNotWeekendDay} */
-export const isNotIsoWeekendDay = compose(not, isIsoWeekendDay);
-
-/** checks instance and additionally the actual time value */
-export const isValidDate = (val: unknown): val is Date => val instanceof Date && !isNaN(val as never);
-
-export const msToSeconds = (ms: number) => ms / msSecond;
-
-/**
- * parses as `Date` instance
- *
- * **CAUTION**: stringified dates without timezone are created as if value came from local timezone
- * @example
- * ```
- *   // when e.g. in German timezone this leads to a different behavior than standard new Date()
- *   asDate('2000-01-01').toISOString();   // > '1999-12-31T23:00:00.000Z'
- *   new Date('2000-01-01').toISOString(); // > '2000-01-01T00:00:00.000Z'
- * ```
- **/
-export function asDate(val: Date | string | number): Date;
-export function asDate(val: null): null;
-export function asDate(val: Date | string | number | null): Date | null;
-export function asDate(val: Date | string | number | null): Date | null {
-  if (val instanceof Date) {
-    return val;
-  }
-
-  if (typeof val === 'number') {
-    return new Date(val);
-  }
-
-  if (typeof val === 'string') {
-    // !!! without 'T' new Date(val) creates it assuming "UTC" but we assume "local timezone"
-    return new Date(val.includes('T') ? val : `${val}T00:00:00.000`);
-  }
-
-  return null;
-}
-
-export const asDateNonNull = (val: Exclude<Parameters<typeof asDate>[0], null>) => asDate(val);
-
-export const dateIsUtcWeekWorkDay = (val: Date) => isNotWeekendDay(val.getUTCDay());
-export const dateIsLocalWeekWorkDay = (val: Date) => isNotWeekendDay(val.getDay());
-
-export const isUtcWeekWorkDay = compose(dateIsUtcWeekWorkDay, asDateNonNull);
-export const isLocalWeekWorkDay = compose(dateIsLocalWeekWorkDay, asDateNonNull);
-
-/** to UTC/ISO string */
+/** @returns ISO format `"2000-01-01T00:00:00.000Z"` */
 export const dateToIso = (val: Date) => val.toISOString();
+/** @returns ISO format `"2000-01-01T00:00:00.000Z"` */
+export const asIso = compose(dateToIso, asDateNonNull);
 
-/** 1st of month: 1 */
-export const dateToUtcDate = (val: Date) => val.getUTCDate();
-
-/** 1st of month: "01" */
-export const dateToUtcDateString = compose(strPadLeftWithZero2, str, dateToUtcDate);
-
-/** 1st of month: 1 */
-export const dateToLocalDate = (val: Date) => val.getDate();
-
-/** 1st of month: "01" */
-export const dateToLocalDateString = compose(strPadLeftWithZero2, str, dateToLocalDate);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekendDay} */
+export const isIsoWeekendDay = arrayForInclude([IsoWeekday.Saturday, IsoWeekday.Sunday]);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekWorkDay} */
+export const isNotIsoWeekendDay = compose(not, isIsoWeekendDay);
 
 /** Jan-Feb: 1-12 */
 export const dateToUtcMonth = (val: Date) => val.getUTCMonth() + 1;
 
 /** Jan: "01" */
-export const dateToUtcMonthString = compose(strPadLeftWithZero2, str, dateToUtcMonth);
+export const dateToUtcMonthString = compose(strPadLeftWithZero2, dateToUtcMonth);
 
 /** Jan-Feb: 1-12 */
 export const dateToLocalMonth = (val: Date) => val.getMonth() + 1;
 
 /** Jan: "01" */
-export const dateToLocalMonthString = compose(strPadLeftWithZero2, str, dateToLocalMonth);
+export const dateToLocalMonthString = compose(strPadLeftWithZero2, dateToLocalMonth);
 
 export const dateToUtcYear = (val: Date) => val.getUTCFullYear();
 
 /** year 920: "0920" */
-export const dateToUtcYearString = compose(strPadLeftWithZero4, str, dateToUtcYear);
+export const dateToUtcYearString = compose(strPadLeftWithZero4, dateToUtcYear);
 
 export const dateToLocalYear = (val: Date) => val.getFullYear();
 
@@ -97,7 +42,8 @@ export const dateToLocalYear = (val: Date) => val.getFullYear();
 export const dateToLocalYearString = compose(strPadLeftWithZero4, dateToLocalYear);
 
 /** yyyy-mm-dd */
-export const dateToUtcDatePart = (val: Date) => joinDate([dateToUtcYearString(val), dateToUtcMonthString(val), dateToUtcDateString(val)]);
+export const dateToUtcDatePart = (val: Date) =>
+  joinDate([dateToUtcYearString(val), dateToUtcMonthString(val), dateToUtcDayDateString(val)]);
 
 /**
  * `yyyy-mm-dd`
@@ -106,37 +52,37 @@ export const dateToUtcDatePart = (val: Date) => joinDate([dateToUtcYearString(va
  * tests if `date1` is later than `date2`.
  */
 export const dateToLocalDatePart = (val: Date) =>
-  joinDate([dateToLocalYearString(val), dateToLocalMonthString(val), dateToLocalDateString(val)]);
+  joinDate([dateToLocalYearString(val), dateToLocalMonthString(val), dateToLocalDayDateString(val)]);
 
 export const dateToUtcHours = (val: Date) => val.getUTCHours();
 
 /** 5 AM: "05" */
-export const dateToUtcHoursString = compose(strPadLeftWithZero2, str, dateToUtcHours);
+export const dateToUtcHoursString = compose(strPadLeftWithZero2, dateToUtcHours);
 
 export const dateToLocalHours = (val: Date) => val.getHours();
 
 /** 5 AM: "05" */
-export const dateToLocalHoursString = compose(strPadLeftWithZero2, str, dateToLocalHours);
+export const dateToLocalHoursString = compose(strPadLeftWithZero2, dateToLocalHours);
 
 export const dateToUtcMinutes = (val: Date) => val.getUTCMinutes();
 
 /** 00:05: "05" */
-export const dateToUtcMinutesString = compose(strPadLeftWithZero2, str, dateToUtcMinutes);
+export const dateToUtcMinutesString = compose(strPadLeftWithZero2, dateToUtcMinutes);
 
 export const dateToLocalMinutes = (val: Date) => val.getMinutes();
 
 /** 00:05: "05" */
-export const dateToLocalMinutesString = compose(strPadLeftWithZero2, str, dateToLocalMinutes);
+export const dateToLocalMinutesString = compose(strPadLeftWithZero2, dateToLocalMinutes);
 
 export const dateToUtcSeconds = (val: Date) => val.getUTCSeconds();
 
 /** 00:00:05: "05" */
-export const dateToUtcSecondsString = compose(strPadLeftWithZero2, str, dateToUtcSeconds);
+export const dateToUtcSecondsString = compose(strPadLeftWithZero2, dateToUtcSeconds);
 
 export const dateToLocalSeconds = (val: Date) => val.getSeconds();
 
 /** 00:00:05: "05" */
-export const dateToLocalSecondsString = compose(strPadLeftWithZero2, str, dateToLocalSeconds);
+export const dateToLocalSecondsString = compose(strPadLeftWithZero2, dateToLocalSeconds);
 
 /** hh:mm */
 export const dateToUtcHhMmPart = (val: Date) => joinTime([dateToUtcHoursString(val), dateToUtcMinutesString(val)]);
@@ -344,9 +290,6 @@ export function dateStartOfLocalYear(val: Date) {
   return date;
 }
 
-export const dateToLocalWeekday = (val: Date) => val.getDay();
-export const dateToUtcWeekday = (val: Date) => val.getUTCDay();
-
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToLocalWeekday} */
 export const dateToLocalIsoWeekday = (val: Date) => (val.getDay() === 0 ? 7 : val.getDay());
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToUtcWeekday} */
@@ -385,9 +328,7 @@ export const dateEndOfLocalQuarter = compose(addMs(-1), addLocalMonths(3), dateS
 export const dateEndOfLocalHalfYear = compose(addMs(-1), addLocalMonths(6), dateStartOfLocalHalfYear);
 export const dateEndOfLocalYear = compose(addMs(-1), addLocalYears(1), dateStartOfLocalYear);
 
-export const dateCopy = compose(asDateNonNull, asTimeValue);
-export const asIsoString = compose(dateToIso, asDateNonNull);
-export const asIsoDatePart = compose(isoToDatePart, asIsoString);
+export const asIsoDatePart = compose(isoToDatePart, asIso);
 
 export const asUtcDatePart = compose(dateToUtcDatePart, asDateNonNull);
 export const asUtcDateTime = compose(dateToUtcDateTime, asDateNonNull);
@@ -398,9 +339,6 @@ export const asLocalDatePart = compose(dateToLocalDatePart, asDateNonNull);
 export const asLocalDateTime = compose(dateToLocalDateTime, asDateNonNull);
 export const asLocalHhMmPart = compose(dateToLocalHhMmPart, asDateNonNull);
 export const asLocalTimePart = compose(dateToLocalTimePart, asDateNonNull);
-
-export const asLocalWeekday = compose(dateToLocalWeekday, asDateNonNull);
-export const asUtcWeekday = compose(dateToUtcWeekday, asDateNonNull);
 
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link asLocalWeekday} */
 export const asLocalIsoWeekday = compose(dateToLocalIsoWeekday, asDateNonNull);

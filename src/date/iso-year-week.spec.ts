@@ -1,4 +1,3 @@
-import {asDate} from './date';
 import {
   asLocalIsoWeek,
   asLocalIsoWeekString,
@@ -7,6 +6,7 @@ import {
   dateMoveToStartOfLocalIsoWeek,
   dateStartOfLocalIsoYearWeek,
 } from './iso-year-week';
+import {asDate} from './parse';
 
 describe(`date iso-year-week`, () => {
   describe(`asIsoYearWeek/IsoYear/IsoWeek, asLocalIsoWeekString`, () => {

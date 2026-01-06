@@ -1,5 +1,4 @@
 import {DateDiffLevel} from './const';
-import {asDate} from './date';
 import {
   dateDiffDays,
   dateDiffHours,
@@ -11,6 +10,7 @@ import {
   dateDiffWeeks,
   dateDiffYears,
 } from './diff';
+import {asDate} from './parse';
 
 describe('date diff', () => {
   describe(`dateDiff`, () => {

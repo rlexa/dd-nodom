@@ -1,4 +1,3 @@
-import {msDay, msHour, msMinute, msSecond, msWeek, Weekday} from './const';
 import {
   addDays,
   addHours,
@@ -10,13 +9,11 @@ import {
   addUtcWeeks,
   addUtcYears,
   addWeeks,
-  asDate,
+  asIso,
   asIsoDatePart,
-  asIsoString,
   asLocalDatePart,
   asTimeValue,
   asUtcHhMmPart,
-  dateCopy,
   dateEndOfUtcDay,
   dateEndOfUtcHalfYear,
   dateEndOfUtcHour,
@@ -40,19 +37,10 @@ import {
   dateToUtcIsoWeekday,
   isLocalIsoWeekWorkDay,
   isoToHhMmPart,
-  isUtcWeekWorkDay,
-  isValidDate,
 } from './date';
+import {asDate} from './parse';
 
 describe(`date`, () => {
-  it(`has main ms values`, () => {
-    expect(msSecond).toBe(1000);
-    expect(msMinute).toBe(1000 * 60);
-    expect(msHour).toBe(1000 * 60 * 60);
-    expect(msDay).toBe(1000 * 60 * 60 * 24);
-    expect(msWeek).toBe(1000 * 60 * 60 * 24 * 7);
-  });
-
   describe(`addDays`, () => {
     it(`adds`, () => expect(addDays(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-02')));
 
@@ -103,27 +91,8 @@ describe(`date`, () => {
     it(`subs`, () => expect(addUtcYears(-1)(asDate('2001-01-01'))).toStrictEqual(asDate('2000-01-01')));
   });
 
-  describe(`asDate`, () => {
-    it(`transforms null to null`, () => expect(asDate(null)).toBeNull());
-
-    it(`transforms date to self`, () => {
-      const date = new Date(123);
-      expect(asDate(date)).toBe(date);
-    });
-
-    it(`transforms 123 to date`, () => expect(asDate(123)).toStrictEqual(new Date(123)));
-
-    it(`transforms '2000-01-01T12:00:00Z' as is`, () =>
-      expect(asDate('2000-01-01T12:00:00Z')).toStrictEqual(new Date('2000-01-01T12:00:00Z')));
-
-    it(`transforms '2000-01-01' to date assumed as local timezone`, () => {
-      const date = new Date('2000-01-01');
-      expect(asDate('2000-01-01')).toStrictEqual(new Date(date.getTime() + date.getTimezoneOffset() * 60_000));
-    });
-  });
-
   describe(`asIsoDate`, () => {
-    it(`transforms e.g. ms to iso`, () => expect(asIsoString(1234)).toBe('1970-01-01T00:00:01.234Z'));
+    it(`transforms e.g. ms to iso`, () => expect(asIso(1234)).toBe('1970-01-01T00:00:01.234Z'));
   });
 
   describe(`asIsoDatePart`, () => {
@@ -140,10 +109,6 @@ describe(`date`, () => {
 
   describe(`asUtcHhMmPart`, () => {
     it(`transforms e.g. ms to date part`, () => expect(asUtcHhMmPart(1234)).toBe('00:00'));
-  });
-
-  describe(`dateCopy`, () => {
-    it(`transforms date to copy`, () => expect(dateCopy(new Date(1))).toStrictEqual(new Date(1)));
   });
 
   describe(`dateEndOfUtc...`, () => {
@@ -283,28 +248,7 @@ describe(`date`, () => {
     it('monday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-07')).toBe(true));
   });
 
-  describe(`isUtcWeekWorkDay`, () => {
-    it(`transforms correctly`, () =>
-      expect(
-        Object.values(Weekday).every((_, ii) => {
-          const date = new Date(ii * msDay);
-          return (
-            isUtcWeekWorkDay(date) ===
-            (date.getUTCDay() !== (Weekday.Saturday as number) && date.getUTCDay() !== (Weekday.Sunday as number))
-          );
-        }),
-      ).toBeTruthy());
-  });
-
   describe(`isoToHhMmPart`, () => {
     it(`returns hh:mm for valid`, () => expect(isoToHhMmPart('2000-01-02T11:22.333Z')).toBe('11:22'));
-  });
-
-  describe(`isValidDate`, () => {
-    it(`validates date`, () => expect(isValidDate(new Date(Date.now()))).toBe(true));
-    it(`invalidates date`, () => expect(isValidDate(new Date('nope'))).toBe(false));
-    it(`invalidates non-date`, () => expect(isValidDate(true)).toBe(false));
-    it(`invalidates undefined`, () => expect(isValidDate(undefined)).toBe(false));
-    it(`invalidates null`, () => expect(isValidDate(null)).toBe(false));
   });
 });

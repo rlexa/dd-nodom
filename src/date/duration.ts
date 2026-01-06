@@ -1,7 +1,6 @@
 import {arrayFilterNotEmpty, arrayJoin, arrayReduce} from '../array';
 import {compose, flip} from '../fp';
 import {avgDaysPerMonth, avgDaysPerYear, DateDiffLevel, dateZero, msDay} from './const';
-import {asDateNonNull} from './date';
 import {
   dateDiffDays,
   dateDiffHours,
@@ -14,6 +13,7 @@ import {
   dateDiffYears,
   removeDateDiffLevels,
 } from './diff';
+import {asDateNonNull} from './parse';
 
 type AllKeysOfType<T> = T extends T ? keyof T : never;
 

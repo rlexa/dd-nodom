@@ -1,6 +1,7 @@
 import {arrayMap} from '../array';
 import {compose} from '../fp';
-import {asDateNonNull, asTimeValue} from './date';
+import {asTimeValue} from './date';
+import {asDateNonNull} from './parse';
 
 export const dateEqual = (left: Parameters<typeof asTimeValue>[0]) => (right: Parameters<typeof asTimeValue>[0]) =>
   left === right || asTimeValue(left) === asTimeValue(right);

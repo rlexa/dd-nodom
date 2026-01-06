@@ -2,7 +2,8 @@ import {arrayJoin} from '../array';
 import {compose} from '../fp';
 import {strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
 import {msWeek, Weekday} from './const';
-import {addWeeks, asDate, asDateNonNull, dateStartOfLocalWorkWeek} from './date';
+import {addWeeks, dateStartOfLocalWorkWeek} from './date';
+import {asDate, asDateNonNull} from './parse';
 
 const joinIsoYearWeek = arrayJoin('-W');
 
