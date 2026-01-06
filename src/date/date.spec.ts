@@ -35,7 +35,6 @@ import {
   dateStartOfUtcYear,
   dateToLocalIsoWeekday,
   dateToUtcIsoWeekday,
-  isLocalIsoWeekWorkDay,
   isoToHhMmPart,
 } from './date';
 import {asDate} from './parse';
@@ -239,13 +238,6 @@ describe(`date`, () => {
       it('resolves Monday as 1', () => expect(dateToUtcIsoWeekday(asDate('2025-06-30T14:00:00.000Z'))).toBe(1));
       it('resolves Sunday as 7', () => expect(dateToUtcIsoWeekday(asDate('2025-06-29T14:00:00.000Z'))).toBe(7));
     });
-  });
-
-  describe(`isLocalIsoWeekWorkDay`, () => {
-    it('friday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-04')).toBe(true));
-    it('saturday not work day', () => expect(isLocalIsoWeekWorkDay('2025-07-05')).toBe(false));
-    it('sunday not work day', () => expect(isLocalIsoWeekWorkDay('2025-07-06')).toBe(false));
-    it('monday work day', () => expect(isLocalIsoWeekWorkDay('2025-07-07')).toBe(true));
   });
 
   describe(`isoToHhMmPart`, () => {

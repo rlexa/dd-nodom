@@ -2,7 +2,7 @@ import {arrayForInclude} from '../array/util';
 import {not} from '../fp/common';
 import {compose} from '../fp/compose';
 import {strPadLeftWithZero2} from '../str/util';
-import {Weekday} from './const';
+import {IsoWeekday, Weekday} from './const';
 import {asDateNonNull} from './parse';
 
 /** @returns day of the week, see {@link Weekday} */
@@ -44,3 +44,25 @@ export const dateIsLocalWeekWorkDay = compose(isWeekWorkDay, dateToLocalWeekday)
 export const isLocalWeekWorkDay = compose(dateIsLocalWeekWorkDay, asDateNonNull);
 export const dateIsUtcWeekWorkDay = compose(isWeekWorkDay, dateToUtcWeekday);
 export const isUtcWeekWorkDay = compose(dateIsUtcWeekWorkDay, asDateNonNull);
+
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekendDay} */
+export const isIsoWeekendDay = arrayForInclude([IsoWeekday.Saturday, IsoWeekday.Sunday]);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link dateIsLocalWeekendDay} */
+export const dateIsLocalIsoWeekendDay = compose(isIsoWeekendDay, dateToLocalWeekday);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isisLocalWeekendDayWeekendDay} */
+export const isLocalIsoWeekendDay = compose(dateIsLocalIsoWeekendDay, asDateNonNull);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isdateIsUtcWeekendDayWeekendDay} */
+export const dateIsUtcIsoWeekendDay = compose(isIsoWeekendDay, dateToUtcWeekday);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isUtcWeekendDay} */
+export const isUtcIsoWeekendDay = compose(dateIsUtcIsoWeekendDay, asDateNonNull);
+
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekWorkDay} */
+export const isIsoWeekWorkDay = compose(not, isIsoWeekendDay);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link dateIsLocalWeekWorkDay} */
+export const dateIsLocalIsoWeekWorkDay = compose(isWeekWorkDay, dateToLocalWeekday);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekWisLocalWeekWorkDayorkDay} */
+export const isLocalIsoWeekWorkDay = compose(dateIsLocalWeekWorkDay, asDateNonNull);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isdateIsUtcWeekWorkDayWeekWorkDay} */
+export const dateIsUtcIsoWeekWorkDay = compose(isWeekWorkDay, dateToUtcWeekday);
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isUtcWeekWorkDay} */
+export const isUtcIsoWeekWorkDay = compose(dateIsUtcWeekWorkDay, asDateNonNull);

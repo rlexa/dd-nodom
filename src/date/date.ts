@@ -1,7 +1,7 @@
-import {arrayForInclude, arrayJoin} from '../array/util';
-import {add, compose, mult, not} from '../fp';
+import {arrayJoin} from '../array/util';
+import {add, compose, mult} from '../fp';
 import {strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
-import {IsoWeekday, msHour, msMinute, msSecond, Weekday} from './const';
+import {msHour, msMinute, msSecond, Weekday} from './const';
 import {dateToLocalDayDateString, dateToUtcDayDateString} from './day';
 import {asDateNonNull, dateCopy} from './parse';
 
@@ -13,11 +13,6 @@ const joinTime = arrayJoin(':');
 export const dateToIso = (val: Date) => val.toISOString();
 /** @returns ISO format `"2000-01-01T00:00:00.000Z"` */
 export const asIso = compose(dateToIso, asDateNonNull);
-
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekendDay} */
-export const isIsoWeekendDay = arrayForInclude([IsoWeekday.Saturday, IsoWeekday.Sunday]);
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekWorkDay} */
-export const isNotIsoWeekendDay = compose(not, isIsoWeekendDay);
 
 /** Jan-Feb: 1-12 */
 export const dateToUtcMonth = (val: Date) => val.getUTCMonth() + 1;
@@ -294,17 +289,6 @@ export function dateStartOfLocalYear(val: Date) {
 export const dateToLocalIsoWeekday = (val: Date) => (val.getDay() === 0 ? 7 : val.getDay());
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToUtcWeekday} */
 export const dateToUtcIsoWeekday = (val: Date) => (val.getUTCDay() === 0 ? 7 : val.getUTCDay());
-
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateIsUtcWeekWorkDay} */
-export const dateIsUtcIsoWeekWorkDay = (val: Date) => isNotIsoWeekendDay(dateToUtcIsoWeekday(val) as IsoWeekday);
-
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateIsLocalWeekWorkDay} */
-export const dateIsLocalIsoWeekWorkDay = (val: Date) => isNotIsoWeekendDay(dateToLocalIsoWeekday(val) as IsoWeekday);
-
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link isUtcWeekWorkDay} */
-export const isUtcIsoWeekWorkDay = compose(dateIsUtcIsoWeekWorkDay, asDateNonNull);
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link isLocalWeekWorkDay} */
-export const isLocalIsoWeekWorkDay = compose(dateIsLocalIsoWeekWorkDay, asDateNonNull);
 
 export const dateEndOfUtcSecond = compose(addMs(-1), addSeconds(1), dateStartOfUtcSecond);
 export const dateEndOfUtcMinute = compose(addMs(-1), addMinutes(1), dateStartOfUtcMinute);
