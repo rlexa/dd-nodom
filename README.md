@@ -48,6 +48,10 @@ Simple utilities.
 
 Date utilities (mostly based on partial application).
 
+_FYI_ Most operators have an additional `as`-prefixed variant which can be applied directly to a date-like value e.g. alongside `dateToIso` there is also `asIso`.
+
+_FYI_ operators with `Local` infix always have an additional `Utc` variant e.g. `dateToLocalDatePart` and `dateToUtcDatePart`.
+
 ### Util
 
 | name            | info                    |
@@ -72,6 +76,31 @@ Date utilities (mostly based on partial application).
 | `msMonth`              | month in ms (average)                           |
 | `msYear`               | year in ms (average)                            |
 
+### Parse
+
+_FYI_ when using `compose` prefer using `asDateNonNull` over `asDate` for better type-safety i.e. handle `null` beforehand.
+
+| name            | info                                        |
+| --------------- | ------------------------------------------- |
+| `isValidDate`   | checks `Date` instance and it's value       |
+| `asDate`        | parses as `Date` instance or `null`         |
+| `asDateNonNull` | parses as `Date` instance, throws if `null` |
+| `dateCopy`      |                                             |
+
+### Stringify
+
+| name                  | info                              | as...   | Utc     |
+| --------------------- | --------------------------------- | ------- | ------- |
+| `dateToIso`           | `"2000-01-01T00:00:00.000Z"`      | &check; |         |
+| `dateToLocalDatePart` | `"yyyy-mm-dd"`                    | &check; | &check; |
+| `dateToLocalHhMmPart` | `"hh:mm"`                         | &check; | &check; |
+| `dateToLocalTimePart` | `"hh:mm:ss"`                      | &check; | &check; |
+| `dateToLocalDateTime` | `"yyyy-mm-ddThh:mm:ss"`           | &check; | &check; |
+| `isoToDatePart`       | `"yyyy-mm-dd"` part of ISO string |         |         |
+| `dateToIsoDatePart`   | to ISO part `"yyyy-mm-dd"`        | &check; |         |
+| `isoToHhMmPart`       | `"hh:mm"` part of ISO string      |         |         |
+| `dateToIsoToHhMmPart` |                                   | &check; |
+
 ### Compare
 
 | name        | info |
@@ -94,6 +123,17 @@ Date utilities (mostly based on partial application).
 | `dateDiffWeeks`           |                                 |
 | `dateDiffMonths`          |                                 |
 | `dateDiffYears`           |                                 |
+
+### ISO Year Week
+
+| name                            | info                                                | as...   | Utc |
+| ------------------------------- | --------------------------------------------------- | ------- | --- |
+| `dateToLocalIsoYearWeek`        | identifies `[year, week]`                           | &check; |     |
+| `dateToLocalIsoWeek`            |                                                     | &check; |     |
+| `dateToLocalIsoYear`            |                                                     | &check; |     |
+| `dateToLocalIsoWeekString`      | `2000-W01` ISO format                               | &check; |     |
+| `dateMoveToStartOfLocalIsoWeek` | using a reference `Date` moves to start of ISO week |         |     |
+| `dateStartOfLocalIsoYearWeek`   | `[year, week]` to start of week as `Date`           |         |     |
 
 ## /fp
 
