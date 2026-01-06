@@ -32,8 +32,8 @@ export const msMinute = 60 * msSecond;
 export const msHour = 60 * msMinute;
 export const msDay = 24 * msHour;
 export const msWeek = 7 * msDay;
-export const msMonths = avgDaysPerMonth * msDay;
-export const msYears = avgDaysPerYear * msDay;
+export const msMonth = avgDaysPerMonth * msDay;
+export const msYear = avgDaysPerYear * msDay;
 
 export const dateZero = new Date(0);
 

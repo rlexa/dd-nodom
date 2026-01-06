@@ -1,6 +1,6 @@
 import {compose} from '../fp/compose';
 import {ceil, div, floor} from '../fp/math';
-import {DateDiffLevel, msDay, msHour, msMinute, msMonths, msSecond, msWeek, msYears} from './const';
+import {DateDiffLevel, msDay, msHour, msMinute, msMonth, msSecond, msWeek, msYear} from './const';
 import {asTimeValue} from './ms';
 
 /** `left - right` */
@@ -77,13 +77,13 @@ export function dateDiffMsDurationLevel(level: DateDiffLevel): (msDiff: number) 
 
     switch (level) {
       case 'years': {
-        const years = normalize(msYears);
-        const rest = dateDiffMsDurationLevel('months')(msDiff - years * msYears);
+        const years = normalize(msYear);
+        const rest = dateDiffMsDurationLevel('months')(msDiff - years * msYear);
         return {...rest, level, years};
       }
       case 'months': {
-        const months = normalize(msMonths);
-        const rest = dateDiffMsDurationLevel('weeks')(msDiff - months * msMonths);
+        const months = normalize(msMonth);
+        const rest = dateDiffMsDurationLevel('weeks')(msDiff - months * msMonth);
         return {...rest, level, months};
       }
       case 'weeks': {
