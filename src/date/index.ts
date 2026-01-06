@@ -9,6 +9,7 @@ export * from './iso-year-week';
 export * from './minute';
 export * from './month';
 export * from './ms';
+export * from './mutate';
 export * from './parse';
 export * from './second';
 export * from './stringify';

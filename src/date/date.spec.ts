@@ -1,15 +1,4 @@
 import {
-  addDays,
-  addHours,
-  addMinutes,
-  addMs,
-  addSeconds,
-  addUtcDays,
-  addUtcMonths,
-  addUtcWeeks,
-  addUtcYears,
-  addWeeks,
-  asTimeValue,
   dateEndOfUtcDay,
   dateEndOfUtcHalfYear,
   dateEndOfUtcHour,
@@ -29,66 +18,9 @@ import {
   dateStartOfUtcWeek,
   dateStartOfUtcWorkWeek,
   dateStartOfUtcYear,
-  dateToLocalIsoWeekday,
-  dateToUtcIsoWeekday,
 } from './date';
-import {asDate} from './parse';
 
 describe(`date`, () => {
-  describe(`addDays`, () => {
-    it(`adds`, () => expect(addDays(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-02')));
-
-    it(`subs`, () => expect(addDays(-1)(asDate('2000-01-02'))).toStrictEqual(asDate('2000-01-01')));
-
-    it(`adds UTC`, () => expect(addUtcDays(1)(asDate('2000-01-01T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-02T00:00:00.000Z')));
-
-    it(`subs UTC`, () => expect(addUtcDays(-1)(asDate('2000-01-02T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-01T00:00:00.000Z')));
-  });
-
-  describe(`addHours`, () => {
-    it(`adds`, () => expect(addHours(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T01:00:00')));
-    it(`subs`, () => expect(addHours(-1)(asDate('2000-01-01T01:00:00'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
-  });
-
-  describe(`addMinutes`, () => {
-    it(`adds`, () => expect(addMinutes(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T00:01:00')));
-    it(`subs`, () => expect(addMinutes(-1)(asDate('2000-01-01T00:01:00'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
-  });
-
-  describe(`addMs`, () => {
-    it(`adds`, () => expect(addMs(1)(asDate('2000-01-01T00:00:00.000'))).toStrictEqual(asDate('2000-01-01T00:00:00.001')));
-    it(`subs`, () => expect(addMs(-1)(asDate('2000-01-01T00:00:00.001'))).toStrictEqual(asDate('2000-01-01T00:00:00.000')));
-  });
-
-  describe(`addSeconds`, () => {
-    it(`adds`, () => expect(addSeconds(1)(asDate('2000-01-01T00:00:00'))).toStrictEqual(asDate('2000-01-01T00:00:01')));
-    it(`subs`, () => expect(addSeconds(-1)(asDate('2000-01-01T00:00:01'))).toStrictEqual(asDate('2000-01-01T00:00:00')));
-  });
-
-  describe(`addWeeks`, () => {
-    it(`adds`, () => expect(addWeeks(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-01-08')));
-
-    it(`subs`, () => expect(addWeeks(-1)(asDate('2000-01-08'))).toStrictEqual(asDate('2000-01-01')));
-
-    it(`adds UTC`, () => expect(addUtcWeeks(1)(asDate('2000-01-01T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-08T00:00:00.000Z')));
-
-    it(`subs UTC`, () => expect(addUtcWeeks(-1)(asDate('2000-01-08T00:00:00.000Z'))).toStrictEqual(asDate('2000-01-01T00:00:00.000Z')));
-  });
-
-  describe(`addUtcMonths`, () => {
-    it(`adds`, () => expect(addUtcMonths(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2000-02-01')));
-    it(`subs`, () => expect(addUtcMonths(-1)(asDate('2000-02-01'))).toStrictEqual(asDate('2000-01-01')));
-  });
-
-  describe(`addUtcYears`, () => {
-    it(`adds`, () => expect(addUtcYears(1)(asDate('2000-01-01'))).toStrictEqual(asDate('2001-01-01')));
-    it(`subs`, () => expect(addUtcYears(-1)(asDate('2001-01-01'))).toStrictEqual(asDate('2000-01-01')));
-  });
-
-  describe(`asTimeValue`, () => {
-    it(`transforms e.g. string to ms`, () => expect(asTimeValue('1970-01-01T00:00:01.234Z')).toBe(1234));
-  });
-
   describe(`dateEndOfUtc...`, () => {
     it(`transforms with dateEndOfUtcSecond`, () =>
       expect(dateEndOfUtcSecond(new Date(`2000-01-01T00:00:00.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.999Z`)));
@@ -205,17 +137,5 @@ describe(`date`, () => {
 
     it(`transforms with dateStartOfUtcYear`, () =>
       expect(dateStartOfUtcYear(new Date(`2000-12-12T12:12:12.123Z`))).toStrictEqual(new Date(`2000-01-01T00:00:00.000Z`)));
-  });
-
-  describe(`dateTo...Weekday`, () => {
-    describe(`dateToIsoWeekday`, () => {
-      it('resolves Monday as 1', () => expect(dateToLocalIsoWeekday(asDate('2025-06-30'))).toBe(1));
-      it('resolves Sunday as 7', () => expect(dateToLocalIsoWeekday(asDate('2025-06-29'))).toBe(7));
-    });
-
-    describe(`dateToUtcIsoWeekday`, () => {
-      it('resolves Monday as 1', () => expect(dateToUtcIsoWeekday(asDate('2025-06-30T14:00:00.000Z'))).toBe(1));
-      it('resolves Sunday as 7', () => expect(dateToUtcIsoWeekday(asDate('2025-06-29T14:00:00.000Z'))).toBe(7));
-    });
   });
 });

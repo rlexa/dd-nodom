@@ -13,3 +13,8 @@ export const dateToUtcMs = (val: Date) => val.getUTCMilliseconds();
 export const dateToUtcMsString = compose(strPadLeftWithZero3, dateToUtcMs);
 /** 00:00:00.012: `"012"` */
 export const asUtcMsString = compose(dateToUtcMsString, asDateNonNull);
+
+/** @returns date javascript milliseconds value */
+export const dateToTimeValue = (val: Date) => val.getTime();
+/** @returns date javascript milliseconds value */
+export const asTimeValue = compose(dateToTimeValue, asDateNonNull);

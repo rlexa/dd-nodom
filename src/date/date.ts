@@ -1,55 +1,18 @@
-import {add, compose, mult} from '../fp';
-import {msHour, msMinute, msSecond, Weekday} from './const';
-import {asDateNonNull, dateCopy} from './parse';
-
-/** @returns date javascript milliseconds value */
-export const dateToTimeValue = (val: Date) => val.getTime();
-/** @returns date javascript milliseconds value */
-export const asTimeValue = compose(dateToTimeValue, asDateNonNull);
-
-export const addMs = (ms: number) => compose(asDateNonNull, add(ms), asTimeValue);
-export const addSeconds = compose(addMs, mult(msSecond));
-export const addMinutes = compose(addMs, mult(msMinute));
-export const addHours = compose(addMs, mult(msHour));
-
-export const addUtcDays = (days: number) => (val: Date) => {
-  const newDate = dateCopy(val);
-  newDate.setUTCDate(newDate.getUTCDate() + days);
-  return newDate;
-};
-
-export const addDays = (days: number) => (val: Date) => {
-  const newDate = dateCopy(val);
-  newDate.setDate(newDate.getDate() + days);
-  return newDate;
-};
-
-export const addWeeks = compose(addDays, mult(7));
-export const addUtcWeeks = compose(addUtcDays, mult(7));
-
-export const addUtcMonths = (months: number) => (val: Date) => {
-  const newDate = dateCopy(val);
-  newDate.setUTCMonth(newDate.getUTCMonth() + months);
-  return newDate;
-};
-
-export const addLocalMonths = (months: number) => (val: Date) => {
-  const newDate = dateCopy(val);
-  newDate.setMonth(newDate.getMonth() + months);
-  return newDate;
-};
-
-export const addUtcYears = (years: number) => (val: Date) => {
-  const newDate = dateCopy(val);
-  newDate.setUTCFullYear(newDate.getUTCFullYear() + years);
-  return newDate;
-};
-
-export const addLocalYears = (years: number) => (val: Date) => {
-  const newDate = dateCopy(val);
-  newDate.setFullYear(newDate.getFullYear() + years);
-  return newDate;
-};
+import {compose} from '../fp';
+import {Weekday} from './const';
+import {
+  addDays,
+  addHours,
+  addLocalMonths,
+  addLocalYears,
+  addMinutes,
+  addMs,
+  addSeconds,
+  addUtcMonths,
+  addUtcYears,
+  addWeeks,
+} from './mutate';
+import {dateCopy} from './parse';
 
 export function dateStartOfUtcSecond(val: Date) {
   const date = dateCopy(val);
@@ -183,11 +146,6 @@ export function dateStartOfLocalYear(val: Date) {
   return date;
 }
 
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToLocalWeekday} */
-export const dateToLocalIsoWeekday = (val: Date) => (val.getDay() === 0 ? 7 : val.getDay());
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToUtcWeekday} */
-export const dateToUtcIsoWeekday = (val: Date) => (val.getUTCDay() === 0 ? 7 : val.getUTCDay());
-
 export const dateEndOfUtcSecond = compose(addMs(-1), addSeconds(1), dateStartOfUtcSecond);
 export const dateEndOfUtcMinute = compose(addMs(-1), addMinutes(1), dateStartOfUtcMinute);
 export const dateEndOfUtcHour = compose(addMs(-1), addHours(1), dateStartOfUtcHour);
@@ -209,8 +167,3 @@ export const dateEndOfLocalMonth = compose(addMs(-1), addLocalMonths(1), dateSta
 export const dateEndOfLocalQuarter = compose(addMs(-1), addLocalMonths(3), dateStartOfLocalQuarter);
 export const dateEndOfLocalHalfYear = compose(addMs(-1), addLocalMonths(6), dateStartOfLocalHalfYear);
 export const dateEndOfLocalYear = compose(addMs(-1), addLocalYears(1), dateStartOfLocalYear);
-
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link asLocalWeekday} */
-export const asLocalIsoWeekday = compose(dateToLocalIsoWeekday, asDateNonNull);
-/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link asUtcWeekday} */
-export const asUtcIsoWeekday = compose(dateToUtcIsoWeekday, asDateNonNull);

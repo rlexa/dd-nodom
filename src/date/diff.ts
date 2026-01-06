@@ -1,6 +1,6 @@
 import {compose} from '../fp';
 import {DateDiffLevel, msDay, msHour, msMinute, msMonths, msSecond, msWeek, msYears} from './const';
-import {asTimeValue} from './date';
+import {asTimeValue} from './ms';
 
 /** `left - right` */
 export const dateDiffMs = (left: string | number | Date) => (right: string | number | Date) => asTimeValue(left) - asTimeValue(right);

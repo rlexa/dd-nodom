@@ -45,24 +45,34 @@ export const isLocalWeekWorkDay = compose(dateIsLocalWeekWorkDay, asDateNonNull)
 export const dateIsUtcWeekWorkDay = compose(isWeekWorkDay, dateToUtcWeekday);
 export const isUtcWeekWorkDay = compose(dateIsUtcWeekWorkDay, asDateNonNull);
 
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToLocalWeekday} */
+export const dateToLocalIsoWeekday = (val: Date) => (val.getDay() === 0 ? 7 : val.getDay());
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link asLocalWeekday} */
+export const asLocalIsoWeekday = compose(dateToLocalIsoWeekday, asDateNonNull);
+
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link dateToUtcWeekday} */
+export const dateToUtcIsoWeekday = (val: Date) => (val.getUTCDay() === 0 ? 7 : val.getUTCDay());
+/** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link asUtcWeekday} */
+export const asUtcIsoWeekday = compose(dateToUtcIsoWeekday, asDateNonNull);
+
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekendDay} */
 export const isIsoWeekendDay = arrayForInclude([IsoWeekday.Saturday, IsoWeekday.Sunday]);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link dateIsLocalWeekendDay} */
-export const dateIsLocalIsoWeekendDay = compose(isIsoWeekendDay, dateToLocalWeekday);
+export const dateIsLocalIsoWeekendDay = compose(isIsoWeekendDay, dateToLocalIsoWeekday);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isisLocalWeekendDayWeekendDay} */
 export const isLocalIsoWeekendDay = compose(dateIsLocalIsoWeekendDay, asDateNonNull);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isdateIsUtcWeekendDayWeekendDay} */
-export const dateIsUtcIsoWeekendDay = compose(isIsoWeekendDay, dateToUtcWeekday);
+export const dateIsUtcIsoWeekendDay = compose(isIsoWeekendDay, dateToUtcIsoWeekday);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isUtcWeekendDay} */
 export const isUtcIsoWeekendDay = compose(dateIsUtcIsoWeekendDay, asDateNonNull);
 
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekWorkDay} */
 export const isIsoWeekWorkDay = compose(not, isIsoWeekendDay);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link dateIsLocalWeekWorkDay} */
-export const dateIsLocalIsoWeekWorkDay = compose(isWeekWorkDay, dateToLocalWeekday);
+export const dateIsLocalIsoWeekWorkDay = compose(isWeekWorkDay, dateToLocalIsoWeekday);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isWeekWisLocalWeekWorkDayorkDay} */
 export const isLocalIsoWeekWorkDay = compose(dateIsLocalWeekWorkDay, asDateNonNull);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isdateIsUtcWeekWorkDayWeekWorkDay} */
-export const dateIsUtcIsoWeekWorkDay = compose(isWeekWorkDay, dateToUtcWeekday);
+export const dateIsUtcIsoWeekWorkDay = compose(isWeekWorkDay, dateToUtcIsoWeekday);
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, for that see {@link isUtcWeekWorkDay} */
 export const isUtcIsoWeekWorkDay = compose(dateIsUtcWeekWorkDay, asDateNonNull);
