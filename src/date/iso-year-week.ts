@@ -11,14 +11,14 @@ export function dateToLocalIsoYearWeek(val: Date): [year: number, week: number] 
   const date = new Date(val.getTime());
 
   const diffToMonday = (date.getDay() + 6) % 7;
-  // goto Thursday
+  // must move to Thursday
   date.setDate(date.getDate() - diffToMonday + 3);
-  // try to prevent possible summer/winter time issues
+  // move to midday to (maybe) prevent summer/winter time problem
   date.setHours(12, 0, 0, 0);
   const msThursday = date.getTime();
-  // goto 1st January
+  // move to January 1st
   date.setMonth(0, 1);
-  // goto first Thursday of the year (which is definition of first iso week)
+  // move to year's first Thursday (iso week starts here)
   if (date.getDay() !== Weekday.Thursday.valueOf()) {
     date.setMonth(0, 1 + ((Weekday.Thursday - date.getDay() + 7) % 7));
   }
@@ -44,7 +44,7 @@ export function dateToLocalIsoWeekString(val: Date) {
 /** `2000-W01` ISO format */
 export const asLocalIsoWeekString = compose(dateToLocalIsoWeekString, asDateNonNull);
 
-/** Moves the `reference` point Date to start of `week` ISO week number. */
+/** @returns `reference` clone date moved to start of `week` (as ISO week) */
 export const dateMoveToStartOfLocalIsoWeek = (reference: Date) => (week: number) =>
   dateMoveToStartOfLocalWorkWeek(addLocalWeeks(week - dateToLocalIsoWeek(reference))(reference));
 

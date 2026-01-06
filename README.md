@@ -48,14 +48,21 @@ Date utilities (mostly based on partial application).
 
 Functional programming utilities.
 
-- `add` - mathematical
+- `add` - mathematical addition
+- `ceil` - mathematical
 - `coalesce`
 - `compose` right-to-left function composition
 - `curry` - `(a, b) => r` ~> `(a) => (b) => r`
+- `div` - mathematical division
 - `findOrDefault`
 - `flip` - `(a) => (b) => r` ~> `(b) => (a) => r`
-- `mult` - mathematical
-- `not`
+- `floor` - mathematical
+- `max` - mathematical
+- `min` - mathematical
+- `mult` - mathematical multiplication
+- `not` - boolean
+- `round` - mathematical
+- `sub` - mathematical subtraction
 
 ## /str
 
