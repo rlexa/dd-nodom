@@ -1,11 +1,13 @@
-import {compose} from '../fp';
+import {compose} from '../fp/compose';
+import {ceil, div, floor} from '../fp/math';
 import {DateDiffLevel, msDay, msHour, msMinute, msMonths, msSecond, msWeek, msYears} from './const';
 import {asTimeValue} from './ms';
 
 /** `left - right` */
 export const dateDiffMs = (left: string | number | Date) => (right: string | number | Date) => asTimeValue(left) - asTimeValue(right);
 
-const floorSigned = (val: number) => (val >= 0 ? Math.floor(val) : Math.ceil(val));
+const floorSigned = (val: number) => (val >= 0 ? floor(val) : ceil(val));
+
 /** naive calculation of diff based on ms (no duration calculation with tz-summer/wintertime) */
 export function dateDiffMsDurationLevel(level: 'years'): (msDiff: number) => {
   level: 'years';
@@ -71,39 +73,41 @@ export function dateDiffMsDurationLevel(level: DateDiffLevel): (msDiff: number) 
   years?: number;
 } {
   return (msDiff: number) => {
+    const normalize = compose(floorSigned, div(msDiff));
+
     switch (level) {
       case 'years': {
-        const years = floorSigned(msDiff / msYears);
+        const years = normalize(msYears);
         const rest = dateDiffMsDurationLevel('months')(msDiff - years * msYears);
         return {...rest, level, years};
       }
       case 'months': {
-        const months = floorSigned(msDiff / msMonths);
+        const months = normalize(msMonths);
         const rest = dateDiffMsDurationLevel('weeks')(msDiff - months * msMonths);
         return {...rest, level, months};
       }
       case 'weeks': {
-        const weeks = floorSigned(msDiff / msWeek);
+        const weeks = normalize(msWeek);
         const rest = dateDiffMsDurationLevel('days')(msDiff - weeks * msWeek);
         return {...rest, level, weeks};
       }
       case 'days': {
-        const days = floorSigned(msDiff / msDay);
+        const days = normalize(msDay);
         const rest = dateDiffMsDurationLevel('hours')(msDiff - days * msDay);
         return {...rest, level, days};
       }
       case 'hours': {
-        const hours = floorSigned(msDiff / msHour);
+        const hours = normalize(msHour);
         const rest = dateDiffMsDurationLevel('minutes')(msDiff - hours * msHour);
         return {...rest, level, hours};
       }
       case 'minutes': {
-        const minutes = floorSigned(msDiff / msMinute);
+        const minutes = normalize(msMinute);
         const rest = dateDiffMsDurationLevel('seconds')(msDiff - minutes * msMinute);
         return {...rest, level, minutes};
       }
       case 'seconds': {
-        const seconds = floorSigned(msDiff / msSecond);
+        const seconds = normalize(msSecond);
         const rest = dateDiffMsDurationLevel('ms')(msDiff - seconds * msSecond);
         return {...rest, level, seconds};
       }

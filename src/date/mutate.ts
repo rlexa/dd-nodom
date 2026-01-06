@@ -1,5 +1,5 @@
 import {compose} from '../fp/compose';
-import {add, mult} from '../fp/math';
+import {add, floor, mult} from '../fp/math';
 import {msDay, msHour, msMinute, msSecond, Weekday} from './const';
 import {asTimeValue} from './ms';
 import {asDateNonNull, dateCopy} from './parse';
@@ -120,20 +120,20 @@ export const dateMoveToStartOfUtcMonth = dateMutate((date) => {
 });
 
 export const dateMoveToStartOfLocalQuarter = dateMutate((date) => {
-  date.setMonth(Math.floor(date.getMonth() / 3) * 3, 1);
+  date.setMonth(floor(date.getMonth() / 3) * 3, 1);
   date.setHours(0, 0, 0, 0);
 });
 export const dateMoveToStartOfUtcQuarter = dateMutate((date) => {
-  date.setUTCMonth(Math.floor(date.getUTCMonth() / 3) * 3, 1);
+  date.setUTCMonth(floor(date.getUTCMonth() / 3) * 3, 1);
   date.setUTCHours(0, 0, 0, 0);
 });
 
 export const dateMoveToStartOfLocalHalfYear = dateMutate((date) => {
-  date.setMonth(Math.floor(date.getMonth() / 6) * 6, 1);
+  date.setMonth(floor(date.getMonth() / 6) * 6, 1);
   date.setHours(0, 0, 0, 0);
 });
 export const dateMoveToStartOfUtcHalfYear = dateMutate((date) => {
-  date.setUTCMonth(Math.floor(date.getUTCMonth() / 6) * 6, 1);
+  date.setUTCMonth(floor(date.getUTCMonth() / 6) * 6, 1);
   date.setUTCHours(0, 0, 0, 0);
 });
 

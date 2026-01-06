@@ -5,6 +5,11 @@ import {
   strIncludes,
   strLower,
   strLowerLocale,
+  strPadLeft,
+  strPadLeftWithZero,
+  strPadLeftWithZero2,
+  strPadLeftWithZero3,
+  strPadLeftWithZero4,
   strSplit,
   strTrim,
   strUpper,
@@ -36,6 +41,14 @@ describe(`string-util`, () => {
   describe(`strLower, strLowerLocale`, () => {
     it(`strLower transforms`, () => expect(strLower('HELLO')).toBe('hello'));
     it(`strLowerLocale transforms`, () => expect(strLowerLocale('HELLO')).toBe('hello'));
+  });
+
+  describe(`strPadLeft`, () => {
+    it(`pads`, () => expect(strPadLeft('.')(5)('1')).toBe('....1'));
+    it(`pads 0`, () => expect(strPadLeftWithZero(5)('1')).toBe('00001'));
+    it(`pads 0 x2`, () => expect(strPadLeftWithZero2('1')).toBe('01'));
+    it(`pads 0 x3`, () => expect(strPadLeftWithZero3('1')).toBe('001'));
+    it(`pads 0 x4`, () => expect(strPadLeftWithZero4('1')).toBe('0001'));
   });
 
   describe(`strSplit`, () => {

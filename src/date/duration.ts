@@ -1,5 +1,7 @@
 import {arrayFilterNotEmpty, arrayJoin, arrayReduce} from '../array';
-import {compose, flip} from '../fp';
+import {flip} from '../fp/common';
+import {compose} from '../fp/compose';
+import {abs, round} from '../fp/math';
 import {avgDaysPerMonth, avgDaysPerYear, DateDiffLevel, dateZero, msDay} from './const';
 import {
   dateDiffDays,
@@ -27,8 +29,9 @@ export const dateDurationWeeks = compose(flip(dateDiffWeeks)(dateZero), asDateNo
 export const dateDurationMonths = compose(flip(dateDiffMonths)(dateZero), asDateNonNull);
 export const dateDurationYears = compose(flip(dateDiffYears)(dateZero), asDateNonNull);
 
-export type LocalizeFormatDurationStyle = 'long' | 'short' | 'narrow' | 'digital';
-export type LocalizeFormatDurationValue =
+export type DurationFormat = 'long' | 'short' | 'narrow' | 'digital';
+
+export type DurationValue =
   | {years: number}
   | {months: number}
   | {weeks: number}
@@ -39,34 +42,34 @@ export type LocalizeFormatDurationValue =
   | {milliseconds: number}
   | {microseconds: number}
   | {nanoseconds: number};
-export const formatStyledLocalizedDuration =
-  (style: LocalizeFormatDurationStyle) => (locale: string) => (duration: LocalizeFormatDurationValue) => {
-    // TODO all browsers have it really, wait for TS to catch up and make this simpler
 
-    const fnFallback = compose(
-      arrayJoin(', '),
-      arrayFilterNotEmpty<string>,
-      arrayReduce<string[]>(() => [])((acc, [key, val]) => [...acc, `${val} ${key}`]),
-      (arg: typeof duration) => Object.entries(arg),
-    );
+export const stringifyDuration = (style: DurationFormat) => (locale: string) => (duration: DurationValue) => {
+  // TODO all browsers have it really, wait for TS to catch up and make this simpler
 
-    try {
-      if ('DurationFormat' in Intl && (Intl as any).DurationFormat.supportedLocalesOf([locale])) {
-        return new (Intl as any).DurationFormat(locale, {style}).format(duration) as string;
-      }
-    } catch {
-      // fallthrough
+  const fnFallback = compose(
+    arrayJoin(', '),
+    arrayFilterNotEmpty<string>,
+    arrayReduce<string[]>(() => [])((acc, [key, val]) => [...acc, `${val} ${key}`]),
+    (arg: typeof duration) => Object.entries(arg),
+  );
+
+  try {
+    if ('DurationFormat' in Intl && (Intl as any).DurationFormat.supportedLocalesOf([locale])) {
+      return new (Intl as any).DurationFormat(locale, {style}).format(duration) as string;
     }
+  } catch {
+    // fallthrough
+  }
 
-    return fnFallback(duration);
-  };
+  return fnFallback(duration);
+};
 
-export const formatDigitalLocaleDuration = formatStyledLocalizedDuration('digital');
-export const formatLongLocaleDuration = formatStyledLocalizedDuration('long');
-export const formatNarrowLocaleDuration = formatStyledLocalizedDuration('narrow');
-export const formatShortLocaleDuration = formatStyledLocalizedDuration('short');
+export const stringifyDurationDigital = stringifyDuration('digital');
+export const stringifyDurationNarrow = stringifyDuration('narrow');
+export const stringifyDurationShort = stringifyDuration('short');
+export const stringifyDurationLong = stringifyDuration('long');
 
-const diffLevelToFormatKey: Record<DateDiffLevel, AllKeysOfType<LocalizeFormatDurationValue>> = {
+const diffLevelToFormatKey: Record<DateDiffLevel, AllKeysOfType<DurationValue>> = {
   days: 'days',
   hours: 'hours',
   minutes: 'minutes',
@@ -100,21 +103,21 @@ const diffLevelsToRoundedLevel = (level: DateDiffLevel) => (from: ReturnType<Ret
   }
 };
 
-export const formatStyledLocalizedShortestDuration = (style: LocalizeFormatDurationStyle) => (locale: string) => (msDuration: number) => {
-  const localize = formatStyledLocalizedDuration(style)(locale);
+export const stringifyShortestDuration = (style: DurationFormat) => (locale: string) => (msDuration: number) => {
+  const localize = stringifyDuration(style)(locale);
 
-  msDuration = Math.abs(msDuration);
+  msDuration = abs(msDuration);
 
   const msYearEstimated = msDay * avgDaysPerYear;
   const years = msDuration / msYearEstimated;
   if (years >= 1) {
-    return localize({years: Math.round(years)});
+    return localize({years: round(years)});
   }
 
   const msMonthEstimated = msDay * avgDaysPerMonth;
   const months = msDuration / msMonthEstimated;
   if (months >= 1) {
-    return localize({months: Math.round(months)});
+    return localize({months: round(months)});
   }
 
   const toExactLevels = dateDiffMsDurationLevel('years');
@@ -135,22 +138,17 @@ export const formatStyledLocalizedShortestDuration = (style: LocalizeFormatDurat
   }
 
   const value = diffLevelsToRoundedLevel(level)(rest);
-  return localize({[diffLevelToFormatKey[level]]: value} as LocalizeFormatDurationValue);
+  return localize({[diffLevelToFormatKey[level]]: value} as DurationValue);
 };
 
 /** shortcut for years..hours duration representation */
-export const formatStyledDurationUpToHours = (style: LocalizeFormatDurationStyle) => (locale: string) =>
-  compose(
-    formatStyledLocalizedDuration(style)(locale),
-    removeDateDiffLevels(['minutes', 'seconds', 'ms']),
-    dateDiffMsDurationLevel('years'),
-  );
-
+export const stringifyDurationUpToHours = (style: DurationFormat) => (locale: string) =>
+  compose(stringifyDuration(style)(locale), removeDateDiffLevels(['minutes', 'seconds', 'ms']), dateDiffMsDurationLevel('years'));
 /** shortcut for years..hours duration representation */
-export const formatDigitalDurationUpToHours = formatStyledDurationUpToHours('digital');
+export const stringifyDurationUpToHoursDigital = stringifyDurationUpToHours('digital');
 /** shortcut for years..hours duration representation */
-export const formatLongDurationUpToHours = formatStyledDurationUpToHours('long');
+export const stringifyDurationUpToHoursLong = stringifyDurationUpToHours('long');
 /** shortcut for years..hours duration representation */
-export const formatNarrowDurationUpToHours = formatStyledDurationUpToHours('narrow');
+export const stringifyDurationUpToHoursNarrow = stringifyDurationUpToHours('narrow');
 /** shortcut for years..hours duration representation */
-export const formatShortDurationUpToHours = formatStyledDurationUpToHours('short');
+export const stringifyDurationUpToHoursShort = stringifyDurationUpToHours('short');

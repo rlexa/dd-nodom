@@ -7,10 +7,10 @@ import {
   dateDurationMs,
   dateDurationSeconds,
   dateDurationWeeks,
-  formatShortDurationUpToHours,
-  formatStyledLocalizedDuration,
-  formatStyledLocalizedShortestDuration,
-  LocalizeFormatDurationValue,
+  DurationValue,
+  stringifyDuration,
+  stringifyDurationUpToHoursShort,
+  stringifyShortestDuration,
 } from './duration';
 
 describe(`date duration`, () => {
@@ -78,17 +78,17 @@ describe(`date duration`, () => {
     it(`floors negative e.g. seconds value`, () => expect(dateDurationSeconds(-msSecond - 123)).toBe(-1));
   });
 
-  describe(`formatDurationUpToHours`, () => {
+  describe(`stringifyDurationUpToHoursShort`, () => {
     it(`transforms`, () =>
       expect(
-        formatShortDurationUpToHours('de-DE')(
+        stringifyDurationUpToHoursShort('de-DE')(
           msDay * avgDaysPerYear * 1 + msDay * avgDaysPerMonth * 2 + msWeek * 3 + msDay * 4 + msHour * 5 + msMinute * 6 + msSecond * 7 + 8,
         ),
       ).toBe('1 J, 2 Mon., 3 Wo., 4 Tg. und 5 Std.'));
   });
 
   describe(`formatStyledLocalizedDuration`, () => {
-    const allDurations: LocalizeFormatDurationValue = {
+    const allDurations: DurationValue = {
       years: 1,
       months: 2,
       weeks: 3,
@@ -103,20 +103,20 @@ describe(`date duration`, () => {
 
     describe(`with invalid locale`, () => {
       it(`transforms all`, () =>
-        expect(formatStyledLocalizedDuration('short')('nope')(allDurations)).toBe(
+        expect(stringifyDuration('short')('nope')(allDurations)).toBe(
           '1 years, 2 months, 3 weeks, 4 days, 5 hours, 6 minutes, 7 seconds, 8 milliseconds, 9 microseconds, 10 nanoseconds',
         ));
 
-      it(`transforms part`, () => expect(formatStyledLocalizedDuration('short')('nope')({days: 1, hours: 2})).toBe('1 days, 2 hours'));
+      it(`transforms part`, () => expect(stringifyDuration('short')('nope')({days: 1, hours: 2})).toBe('1 days, 2 hours'));
     });
 
     describe(`with valid locale`, () => {
       it(`transforms all`, () =>
-        expect(formatStyledLocalizedDuration('short')('de-DE')(allDurations)).toBe(
+        expect(stringifyDuration('short')('de-DE')(allDurations)).toBe(
           '1 J, 2 Mon., 3 Wo., 4 Tg., 5 Std., 6 Min., 7 Sek., 8 ms, 9 μs und 10 ns',
         ));
 
-      it(`transforms part`, () => expect(formatStyledLocalizedDuration('short')('de-DE')({days: 1, hours: 2})).toBe('1 Tg., 2 Std.'));
+      it(`transforms part`, () => expect(stringifyDuration('short')('de-DE')({days: 1, hours: 2})).toBe('1 Tg., 2 Std.'));
     });
   });
 
@@ -126,54 +126,44 @@ describe(`date duration`, () => {
 
     describe(`with invalid locale`, () => {
       it(`floors: years`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msYearEstimated + msYearEstimated * 0.49)).toBe('2 years'));
-      it(`floors: months`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msMonth + msMonth * 0.49)).toBe('2 months'));
-      it(`floors: weeks`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msWeek + 3 * msDay)).toBe('2 weeks'));
-      it(`floors: days`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msDay + 11 * msHour)).toBe('2 days'));
-      it(`floors: hours`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msHour + 29 * msMinute)).toBe('2 hours'));
-      it(`floors: minutes`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msMinute + 29 * msSecond)).toBe('2 minutes'));
-      it(`floors: seconds`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msSecond + 499)).toBe('2 seconds'));
+        expect(stringifyShortestDuration('short')('nope')(2 * msYearEstimated + msYearEstimated * 0.49)).toBe('2 years'));
+      it(`floors: months`, () => expect(stringifyShortestDuration('short')('nope')(2 * msMonth + msMonth * 0.49)).toBe('2 months'));
+      it(`floors: weeks`, () => expect(stringifyShortestDuration('short')('nope')(2 * msWeek + 3 * msDay)).toBe('2 weeks'));
+      it(`floors: days`, () => expect(stringifyShortestDuration('short')('nope')(2 * msDay + 11 * msHour)).toBe('2 days'));
+      it(`floors: hours`, () => expect(stringifyShortestDuration('short')('nope')(2 * msHour + 29 * msMinute)).toBe('2 hours'));
+      it(`floors: minutes`, () => expect(stringifyShortestDuration('short')('nope')(2 * msMinute + 29 * msSecond)).toBe('2 minutes'));
+      it(`floors: seconds`, () => expect(stringifyShortestDuration('short')('nope')(2 * msSecond + 499)).toBe('2 seconds'));
       it(`rounds up: years`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msYearEstimated + 0.5 * msYearEstimated)).toBe('3 years'));
-      it(`rounds up: months`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msMonth + 0.5 * msMonth)).toBe('3 months'));
-      it(`rounds up: weeks`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msWeek + 4 * msDay)).toBe('3 weeks'));
-      it(`rounds up: days`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msDay + 12 * msHour)).toBe('3 days'));
-      it(`rounds up: hours`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msHour + 30 * msMinute)).toBe('3 hours'));
-      it(`rounds up: minutes`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msMinute + 30 * msSecond)).toBe('3 minutes'));
-      it(`rounds up: seconds`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(2 * msSecond + 500)).toBe('3 seconds'));
-      it(`ms`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(999)).toBe('999 milliseconds'));
-      it(`negative ms`, () => expect(formatStyledLocalizedShortestDuration('short')('nope')(-999)).toBe('999 milliseconds'));
+        expect(stringifyShortestDuration('short')('nope')(2 * msYearEstimated + 0.5 * msYearEstimated)).toBe('3 years'));
+      it(`rounds up: months`, () => expect(stringifyShortestDuration('short')('nope')(2 * msMonth + 0.5 * msMonth)).toBe('3 months'));
+      it(`rounds up: weeks`, () => expect(stringifyShortestDuration('short')('nope')(2 * msWeek + 4 * msDay)).toBe('3 weeks'));
+      it(`rounds up: days`, () => expect(stringifyShortestDuration('short')('nope')(2 * msDay + 12 * msHour)).toBe('3 days'));
+      it(`rounds up: hours`, () => expect(stringifyShortestDuration('short')('nope')(2 * msHour + 30 * msMinute)).toBe('3 hours'));
+      it(`rounds up: minutes`, () => expect(stringifyShortestDuration('short')('nope')(2 * msMinute + 30 * msSecond)).toBe('3 minutes'));
+      it(`rounds up: seconds`, () => expect(stringifyShortestDuration('short')('nope')(2 * msSecond + 500)).toBe('3 seconds'));
+      it(`ms`, () => expect(stringifyShortestDuration('short')('nope')(999)).toBe('999 milliseconds'));
+      it(`negative ms`, () => expect(stringifyShortestDuration('short')('nope')(-999)).toBe('999 milliseconds'));
     });
 
     describe(`with valid locale`, () => {
       it(`floors: years`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msYearEstimated + msYearEstimated * 0.49)).toBe('2 J'));
-      it(`floors: months`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msMonth + msMonth * 0.49)).toBe('2 Mon.'));
-      it(`floors: weeks`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msWeek + 3 * msDay)).toBe('2 Wo.'));
-      it(`floors: days`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msDay + 11 * msHour)).toBe('2 Tg.'));
-      it(`floors: hours`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msHour + 29 * msMinute)).toBe('2 Std.'));
-      it(`floors: minutes`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msMinute + 29 * msSecond)).toBe('2 Min.'));
-      it(`floors: seconds`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msSecond + 499)).toBe('2 Sek.'));
+        expect(stringifyShortestDuration('short')('de-DE')(2 * msYearEstimated + msYearEstimated * 0.49)).toBe('2 J'));
+      it(`floors: months`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msMonth + msMonth * 0.49)).toBe('2 Mon.'));
+      it(`floors: weeks`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msWeek + 3 * msDay)).toBe('2 Wo.'));
+      it(`floors: days`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msDay + 11 * msHour)).toBe('2 Tg.'));
+      it(`floors: hours`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msHour + 29 * msMinute)).toBe('2 Std.'));
+      it(`floors: minutes`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msMinute + 29 * msSecond)).toBe('2 Min.'));
+      it(`floors: seconds`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msSecond + 499)).toBe('2 Sek.'));
       it(`rounds up: years`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msYearEstimated + 0.5 * msYearEstimated)).toBe('3 J'));
-      it(`rounds up: months`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msMonth + 0.5 * msMonth)).toBe('3 Mon.'));
-      it(`rounds up: weeks`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msWeek + 4 * msDay)).toBe('3 Wo.'));
-      it(`rounds up: days`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msDay + 12 * msHour)).toBe('3 Tg.'));
-      it(`rounds up: hours`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msHour + 30 * msMinute)).toBe('3 Std.'));
-      it(`rounds up: minutes`, () =>
-        expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msMinute + 30 * msSecond)).toBe('3 Min.'));
-      it(`rounds up: seconds`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(2 * msSecond + 500)).toBe('3 Sek.'));
-      it(`ms`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(999)).toBe('999 ms'));
-      it(`negative ms`, () => expect(formatStyledLocalizedShortestDuration('short')('de-DE')(-999)).toBe('999 ms'));
+        expect(stringifyShortestDuration('short')('de-DE')(2 * msYearEstimated + 0.5 * msYearEstimated)).toBe('3 J'));
+      it(`rounds up: months`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msMonth + 0.5 * msMonth)).toBe('3 Mon.'));
+      it(`rounds up: weeks`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msWeek + 4 * msDay)).toBe('3 Wo.'));
+      it(`rounds up: days`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msDay + 12 * msHour)).toBe('3 Tg.'));
+      it(`rounds up: hours`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msHour + 30 * msMinute)).toBe('3 Std.'));
+      it(`rounds up: minutes`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msMinute + 30 * msSecond)).toBe('3 Min.'));
+      it(`rounds up: seconds`, () => expect(stringifyShortestDuration('short')('de-DE')(2 * msSecond + 500)).toBe('3 Sek.'));
+      it(`ms`, () => expect(stringifyShortestDuration('short')('de-DE')(999)).toBe('999 ms'));
+      it(`negative ms`, () => expect(stringifyShortestDuration('short')('de-DE')(-999)).toBe('999 ms'));
     });
   });
 });

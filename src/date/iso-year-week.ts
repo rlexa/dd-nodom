@@ -1,5 +1,5 @@
 import {arrayJoin} from '../array';
-import {compose} from '../fp';
+import {ceil, compose} from '../fp';
 import {strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
 import {msWeek, Weekday} from './const';
 import {addLocalWeeks, dateMoveToStartOfLocalWorkWeek} from './mutate';
@@ -23,19 +23,26 @@ export function dateToLocalIsoYearWeek(val: Date): [year: number, week: number] 
     date.setMonth(0, 1 + ((Weekday.Thursday - date.getDay() + 7) % 7));
   }
 
-  const week = 1 + Math.ceil((msThursday - date.getTime()) / msWeek);
+  const week = 1 + ceil((msThursday - date.getTime()) / msWeek);
   const year = week >= 52 && val.getMonth() < 1 ? val.getFullYear() - 1 : val.getFullYear();
 
   return [year, week];
 }
+export const asLocalIsoYearWeek = compose(dateToLocalIsoYearWeek, asDateNonNull);
+
 export const dateToLocalIsoWeek = (val: Date) => dateToLocalIsoYearWeek(val)[1];
+export const asLocalIsoWeek = compose(dateToLocalIsoWeek, asDateNonNull);
+
 export const dateToLocalIsoYear = (val: Date) => dateToLocalIsoYearWeek(val)[0];
+export const asLocalIsoYear = compose(dateToLocalIsoYear, asDateNonNull);
 
 /** `2000-W01` ISO format */
 export function dateToLocalIsoWeekString(val: Date) {
   const yearWeek = dateToLocalIsoYearWeek(val);
-  return joinIsoYearWeek([strPadLeftWithZero4(String(yearWeek[0])), strPadLeftWithZero2(String(yearWeek[1]))]);
+  return joinIsoYearWeek([strPadLeftWithZero4(yearWeek[0]), strPadLeftWithZero2(yearWeek[1])]);
 }
+/** `2000-W01` ISO format */
+export const asLocalIsoWeekString = compose(dateToLocalIsoWeekString, asDateNonNull);
 
 /** Moves the `reference` point Date to start of `week` ISO week number. */
 export const dateMoveToStartOfLocalIsoWeek = (reference: Date) => (week: number) =>
@@ -43,9 +50,3 @@ export const dateMoveToStartOfLocalIsoWeek = (reference: Date) => (week: number)
 
 export const dateStartOfLocalIsoYearWeek = (isoYearWeek: [year: number, week: number]) =>
   dateMoveToStartOfLocalIsoWeek(asDate(`${isoYearWeek[0]}-01-15`))(isoYearWeek[1]);
-
-export const asLocalIsoYearWeek = compose(dateToLocalIsoYearWeek, asDateNonNull);
-export const asLocalIsoWeek = compose(dateToLocalIsoWeek, asDateNonNull);
-export const asLocalIsoYear = compose(dateToLocalIsoYear, asDateNonNull);
-/** `2000-W01` ISO format */
-export const asLocalIsoWeekString = compose(dateToLocalIsoWeekString, asDateNonNull);
