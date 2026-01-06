@@ -1,9 +1,13 @@
 import {arrayJoin} from '../array/util';
 import {add, compose, mult} from '../fp';
-import {strPadLeftWithZero2, strPadLeftWithZero4} from '../str';
 import {msHour, msMinute, msSecond, Weekday} from './const';
 import {dateToLocalDayDateString, dateToUtcDayDateString} from './day';
+import {dateToLocalHoursString, dateToUtcHoursString} from './hour';
+import {dateToLocalMinutesString, dateToUtcMinutesString} from './minute';
+import {dateToLocalMonthString, dateToUtcMonthString} from './month';
 import {asDateNonNull, dateCopy} from './parse';
+import {dateToLocalSeconds, dateToUtcSeconds} from './second';
+import {dateToLocalYearString, dateToUtcYearString} from './year';
 
 const joinDate = arrayJoin('-');
 const joinDateTime = arrayJoin('T');
@@ -14,100 +18,66 @@ export const dateToIso = (val: Date) => val.toISOString();
 /** @returns ISO format `"2000-01-01T00:00:00.000Z"` */
 export const asIso = compose(dateToIso, asDateNonNull);
 
-/** Jan-Feb: 1-12 */
-export const dateToUtcMonth = (val: Date) => val.getUTCMonth() + 1;
+/** @returns date javascript milliseconds value */
+export const dateToTimeValue = (val: Date) => val.getTime();
+/** @returns date javascript milliseconds value */
+export const asTimeValue = compose(dateToTimeValue, asDateNonNull);
 
-/** Jan: "01" */
-export const dateToUtcMonthString = compose(strPadLeftWithZero2, dateToUtcMonth);
-
-/** Jan-Feb: 1-12 */
-export const dateToLocalMonth = (val: Date) => val.getMonth() + 1;
-
-/** Jan: "01" */
-export const dateToLocalMonthString = compose(strPadLeftWithZero2, dateToLocalMonth);
-
-export const dateToUtcYear = (val: Date) => val.getUTCFullYear();
-
-/** year 920: "0920" */
-export const dateToUtcYearString = compose(strPadLeftWithZero4, dateToUtcYear);
-
-export const dateToLocalYear = (val: Date) => val.getFullYear();
-
-/** year 920: "0920" */
-export const dateToLocalYearString = compose(strPadLeftWithZero4, dateToLocalYear);
-
-/** yyyy-mm-dd */
-export const dateToUtcDatePart = (val: Date) =>
-  joinDate([dateToUtcYearString(val), dateToUtcMonthString(val), dateToUtcDayDateString(val)]);
-
-/**
- * `yyyy-mm-dd`
- *
- * Note that this format is suited for string comparison, e.g. `dateToLocalDatePart(date1) > dateToLocalDatePart(date2)`
- * tests if `date1` is later than `date2`.
- */
+/** @returns `"yyyy-mm-dd"` */
 export const dateToLocalDatePart = (val: Date) =>
   joinDate([dateToLocalYearString(val), dateToLocalMonthString(val), dateToLocalDayDateString(val)]);
+/** @returns `"yyyy-mm-dd"` */
+export const asLocalDatePart = compose(dateToLocalDatePart, asDateNonNull);
 
-export const dateToUtcHours = (val: Date) => val.getUTCHours();
+/** @returns `"yyyy-mm-dd"` */
+export const dateToUtcDatePart = (val: Date) =>
+  joinDate([dateToUtcYearString(val), dateToUtcMonthString(val), dateToUtcDayDateString(val)]);
+/** @returns `"yyyy-mm-dd"` */
+export const asUtcDatePart = compose(dateToUtcDatePart, asDateNonNull);
 
-/** 5 AM: "05" */
-export const dateToUtcHoursString = compose(strPadLeftWithZero2, dateToUtcHours);
-
-export const dateToLocalHours = (val: Date) => val.getHours();
-
-/** 5 AM: "05" */
-export const dateToLocalHoursString = compose(strPadLeftWithZero2, dateToLocalHours);
-
-export const dateToUtcMinutes = (val: Date) => val.getUTCMinutes();
-
-/** 00:05: "05" */
-export const dateToUtcMinutesString = compose(strPadLeftWithZero2, dateToUtcMinutes);
-
-export const dateToLocalMinutes = (val: Date) => val.getMinutes();
-
-/** 00:05: "05" */
-export const dateToLocalMinutesString = compose(strPadLeftWithZero2, dateToLocalMinutes);
-
-export const dateToUtcSeconds = (val: Date) => val.getUTCSeconds();
-
-/** 00:00:05: "05" */
-export const dateToUtcSecondsString = compose(strPadLeftWithZero2, dateToUtcSeconds);
-
-export const dateToLocalSeconds = (val: Date) => val.getSeconds();
-
-/** 00:00:05: "05" */
-export const dateToLocalSecondsString = compose(strPadLeftWithZero2, dateToLocalSeconds);
-
-/** hh:mm */
-export const dateToUtcHhMmPart = (val: Date) => joinTime([dateToUtcHoursString(val), dateToUtcMinutesString(val)]);
-
-/** hh:mm */
+/** @returns `"hh:mm"` */
 export const dateToLocalHhMmPart = (val: Date) => joinTime([dateToLocalHoursString(val), dateToLocalMinutesString(val)]);
+/** @returns `"hh:mm"` */
+export const asLocalHhMmPart = compose(dateToLocalHhMmPart, asDateNonNull);
 
-/** hh:mm:ss */
-export const dateToUtcTimePart = (val: Date) => joinTime([dateToUtcHhMmPart(val), dateToUtcSeconds(val)]);
+/** @returns `"hh:mm"` */
+export const dateToUtcHhMmPart = (val: Date) => joinTime([dateToUtcHoursString(val), dateToUtcMinutesString(val)]);
+/** @returns `"hh:mm"` */
+export const asUtcHhMmPart = compose(dateToUtcHhMmPart, asDateNonNull);
 
-/** hh:mm:ss */
+/** @returns `"hh:mm:ss"` */
 export const dateToLocalTimePart = (val: Date) => joinTime([dateToLocalHhMmPart(val), dateToLocalSeconds(val)]);
+/** @returns `"hh:mm:ss"` */
+export const asLocalTimePart = compose(dateToLocalTimePart, asDateNonNull);
 
-/** yyyy-mm-ddThh:mm:ss */
-export const dateToUtcDateTime = (val: Date) => joinDateTime([dateToUtcDatePart(val), dateToUtcTimePart(val)]);
+/** @returns `"hh:mm:ss"` */
+export const dateToUtcTimePart = (val: Date) => joinTime([dateToUtcHhMmPart(val), dateToUtcSeconds(val)]);
+/** @returns `"hh:mm:ss"` */
+export const asUtcTimePart = compose(dateToUtcTimePart, asDateNonNull);
 
-/** yyyy-mm-ddThh:mm:ss */
+/** @return `"yyyy-mm-ddThh:mm:ss"` */
 export const dateToLocalDateTime = (val: Date) => joinDateTime([dateToLocalDatePart(val), dateToLocalTimePart(val)]);
+/** @return `"yyyy-mm-ddThh:mm:ss"` */
+export const asLocalDateTime = compose(dateToLocalDateTime, asDateNonNull);
 
-/** date as javascript milliseconds value */
-export const dateToValue = (val: Date) => val.getTime();
+/** @return `"yyyy-mm-ddThh:mm:ss"` */
+export const dateToUtcDateTime = (val: Date) => joinDateTime([dateToUtcDatePart(val), dateToUtcTimePart(val)]);
+/** @return `"yyyy-mm-ddThh:mm:ss"` */
+export const asUtcDateTime = compose(dateToUtcDateTime, asDateNonNull);
 
-/** date-like as javascript milliseconds value */
-export const asTimeValue = compose(dateToValue, asDateNonNull);
-
-/** cuts out the yyyy-mm-dd part */
+/** @return `"yyyy-mm-dd"` part of ISO string */
 export const isoToDatePart = (val: string) => val.substring(0, 'yyyy-mm-dd'.length);
+/** @return `"yyyy-mm-dd"` part of ISO */
+export const dateToIsoDatePart = compose(isoToDatePart, dateToIso);
+/** @return `"yyyy-mm-dd"` part of ISO */
+export const asIsoDatePart = compose(dateToIsoDatePart, asDateNonNull);
 
-/** cuts out the hh:mm part */
+/** @return `"hh:mm"` part of ISO string */
 export const isoToHhMmPart = (val: string) => val.substring('yyyy-mm-ddT'.length, 'yyyy-mm-ddThh:mm'.length);
+/** @return `"hh:mm"` part of ISO string */
+export const dateToIsoToHhMmPart = compose(isoToHhMmPart, dateToIso);
+/** @return `"hh:mm"` part of ISO string */
+export const asIsoHhMmPart = compose(dateToIsoToHhMmPart, asDateNonNull);
 
 export const addMs = (ms: number) => compose(asDateNonNull, add(ms), asTimeValue);
 export const addSeconds = compose(addMs, mult(msSecond));
@@ -311,18 +281,6 @@ export const dateEndOfLocalMonth = compose(addMs(-1), addLocalMonths(1), dateSta
 export const dateEndOfLocalQuarter = compose(addMs(-1), addLocalMonths(3), dateStartOfLocalQuarter);
 export const dateEndOfLocalHalfYear = compose(addMs(-1), addLocalMonths(6), dateStartOfLocalHalfYear);
 export const dateEndOfLocalYear = compose(addMs(-1), addLocalYears(1), dateStartOfLocalYear);
-
-export const asIsoDatePart = compose(isoToDatePart, asIso);
-
-export const asUtcDatePart = compose(dateToUtcDatePart, asDateNonNull);
-export const asUtcDateTime = compose(dateToUtcDateTime, asDateNonNull);
-export const asUtcHhMmPart = compose(dateToUtcHhMmPart, asDateNonNull);
-export const asUtcTimePart = compose(dateToUtcTimePart, asDateNonNull);
-
-export const asLocalDatePart = compose(dateToLocalDatePart, asDateNonNull);
-export const asLocalDateTime = compose(dateToLocalDateTime, asDateNonNull);
-export const asLocalHhMmPart = compose(dateToLocalHhMmPart, asDateNonNull);
-export const asLocalTimePart = compose(dateToLocalTimePart, asDateNonNull);
 
 /** Mo-Su: 1-7 **CAUTION** not standard JS `Date.getDay`, see {@link asLocalWeekday} */
 export const asLocalIsoWeekday = compose(dateToLocalIsoWeekday, asDateNonNull);

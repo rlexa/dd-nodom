@@ -66,7 +66,7 @@ String utilities (mostly based on partial application).
 - `strIncludes`, `strForIncludes`
 - `strLower`, `strLowerLocale`
 - `strNonNull` - stringify (always a string result)
-- `strPadLeft`, `strPadLeftWithZero`, `strPadLeftWithZero2`, `strPadLeftWithZero4`
+- `strPadLeft`, `strPadLeftWithZero`, `strPadLeftWithZero2`, `strPadLeftWithZero3`, `strPadLeftWithZero4`
 - `strSplit`, `strForSplit`
 - `strTrim`
 - `strUpper`, `strUpperLocale`

@@ -27,6 +27,7 @@ export const strForIncludes = flip(strIncludes);
 export const strPadLeft = (padWith: string) => (max: number) => (val: unknown) => strNonNull(val).padStart(max, padWith);
 export const strPadLeftWithZero = strPadLeft('0');
 export const strPadLeftWithZero2 = strPadLeftWithZero(2);
+export const strPadLeftWithZero3 = strPadLeftWithZero(3);
 export const strPadLeftWithZero4 = strPadLeftWithZero(4);
 
 // #endregion
