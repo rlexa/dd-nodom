@@ -22,7 +22,7 @@ _FYI_ All functions are based on immutability.
 | `arrayFlat`                                                           | `([][]) => []`                 | flattens array one level deep                                |
 | `arrayIncludes`                                                       | `value => [] => boolean`       | `true` if `value` is in the array                            |
 | [`arrayForInclude`](#arrayforinclude)                                 | `[] => value => boolean`       | flipped `arrayIncludes`                                      |
-| `arrayJoin`                                                           | `separator => [] => string`    | joins array items into a string using the `separator`        |
+| [`arrayJoin`](#arrayjoin)                                             | `separator => [] => string`    | joins array items into a string using the `separator`        |
 | `arrayForJoin`                                                        | `[] => separator => string`    | flipped `arrayJoin`                                          |
 | `arrayMap`                                                            | `fn => [] => []`               | maps items via `fn: (item, index, all) => itemNew`           |
 | `arrayForMap`                                                         | `[] => fn => []`               | flipped `arrayMap`                                           |
@@ -64,6 +64,19 @@ const isValidColor = arrayForInclude(Object.values(ValidColor) as string[]);
 
 isValidColor(ValidColor.BLUE); // -> true
 isValidColor('yellow'); // -> false
+```
+
+### arrayJoin
+
+```typescript
+const joinSentences = arrayJoin(' ')<string>;
+const joinSections = arrayJoin('\n')<string>;
+const makeArticle = compose(joinSections, arrayMap(joinSentences));
+
+const text1 = ['Hello world!', 'Nice clouds.'];
+const text2 = ['Bye world!', 'Stay green.'];
+
+makeArticle([text1, text2]); // -> 'Hello world! Nice clouds.\nBye world! Stay green.'
 ```
 
 ### arrayReduce
