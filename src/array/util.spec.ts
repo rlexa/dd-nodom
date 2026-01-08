@@ -117,25 +117,22 @@ describe(`array-util`, () => {
   });
 
   describe(`arraySortByKey`, () => {
-    it('transforms null', () => expect(arraySortByKey(null, 'meh')).toBeNull());
-    it('transforms undefined', () => expect(arraySortByKey(undefined, 'meh')).toBeUndefined());
-
     it('transforms list with labels', () =>
-      expect(arraySortByKey([{key: 'b'}, {key: 'a'}], 'key')).toStrictEqual([{key: 'a'}, {key: 'b'}]));
+      expect(arraySortByKey<{key: string}>('key')([{key: 'b'}, {key: 'a'}])).toStrictEqual([{key: 'a'}, {key: 'b'}]));
 
-    it('transforms list with numbers', () => expect(arraySortByKey([{key: 10}, {key: 1}], 'key')).toStrictEqual([{key: 1}, {key: 10}]));
+    it('transforms list with numbers', () =>
+      expect(arraySortByKey<{key: number}>('key')([{key: 10}, {key: 1}])).toStrictEqual([{key: 1}, {key: 10}]));
 
     it('transforms list with multiple', () =>
       expect(
-        arraySortByKey(
-          [
-            {first: 'b', last: 'c'},
-            {first: 'a', last: 'b'},
-            {first: 'a', last: 'a'},
-          ],
+        arraySortByKey<{first: string; last: string}>(
           'first',
           'last',
-        ),
+        )([
+          {first: 'b', last: 'c'},
+          {first: 'a', last: 'b'},
+          {first: 'a', last: 'a'},
+        ]),
       ).toStrictEqual([
         {first: 'a', last: 'a'},
         {first: 'a', last: 'b'},

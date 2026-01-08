@@ -90,15 +90,10 @@ export const arrayExtractDistinctValuesOfKey = <T, K extends keyof T>(key: K) =>
 /** Removes duplicates. */
 export const arrayUnique = <T>(items: T[]) => [...new Set(items)];
 
-export function arraySortByKey<T>(vals: T[], ...keys: (keyof T)[]): T[];
-export function arraySortByKey<T>(vals: (T | null | undefined)[], ...keys: (keyof T)[]): (T | null | undefined)[];
-export function arraySortByKey<T>(vals: T[] | null | undefined, ...keys: (keyof T)[]): T[] | null | undefined;
-export function arraySortByKey<T>(
-  vals: (T | null | undefined)[] | null | undefined,
-  ...keys: (keyof T)[]
-): (T | null | undefined)[] | null | undefined;
-export function arraySortByKey<T>(vals: (T | null | undefined)[] | null | undefined, ...keys: (keyof T)[]) {
-  return !vals
-    ? vals
-    : [...vals].sort((aa, bb) => keys.reduce((acc, key) => (!acc ? strCompareAlphanumeric('' + aa?.[key], '' + bb?.[key]) : acc), 0));
-}
+/** Sorts array by keys (e.g. by `surname`, `name`), alphanumeric. */
+export const arraySortByKey =
+  <T>(...keys: (keyof T)[]) =>
+  (vals: T[]) =>
+    !vals.length
+      ? vals
+      : [...vals].sort((aa, bb) => keys.reduce((acc, key) => (!acc ? strCompareAlphanumeric('' + aa?.[key], '' + bb?.[key]) : acc), 0));

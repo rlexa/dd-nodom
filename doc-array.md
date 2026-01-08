@@ -31,7 +31,7 @@ _FYI_ All functions are based on immutability.
 | `arrayForRemove`                                                      | `[] => value => []`            | flipped `arrayRemove`                                        |
 | `arraySome`                                                           | `fn => [] => boolean`          | `true` if some item is: `fn: (item, index, all) => boolean`  |
 | `arrayForSome`                                                        | `[] => fn => boolean`          | flipped `arraySome`                                          |
-| `arraySortByKey`                                                      | `([], ...keys) => []`          | sorts array objects by keys (e.g. by `surname`, `name`)      |
+| [`arraySortByKey`](#arraysortbykey)                                   | `(...keys) => [] => []`        | sorts array objects by keys (e.g. by `surname`, `name`)      |
 | `arraySort`                                                           | `fn => [] => []`               | sorts array via (optional) `fn: (itemA, itemB) => number`    |
 | `arrayForSort`                                                        | `[] => fn => []`               | flipped `arraySort`                                          |
 | `arrayUnique`                                                         | `[] => []`                     | removes duplicates                                           |
@@ -92,4 +92,25 @@ makeArticle([text1, text2]); // -> 'Hello world! Nice clouds.\nBye world! Stay g
 ```typescript
 const findMax = arrayReduce(() => 0)<number>((acc, ii) => Math.max(acc, ii));
 findMax([1, 4, 3, 2]); // -> 4
+```
+
+### arraySortByKey
+
+```typescript
+type Person = {name: string; surname: string};
+
+const persons: Person[] = [
+  {name: 'Bob', surname: 'Bobson'},
+  {name: 'Al', surname: 'Bobson'},
+  {name: 'Al', surname: 'Alson'},
+];
+
+const sortPersons = arraySortByKey<Person>('name', 'surname');
+
+sortPersons(persons);
+// -> [
+//      {name: 'Al', surname: 'Alson'}
+//      {name: 'Al', surname: 'Bobson'},
+//      {name: 'Bob', surname: 'Bobson'}
+//    ]
 ```
