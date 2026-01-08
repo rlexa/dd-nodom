@@ -20,7 +20,7 @@ _FYI_ All functions are based on immutability.
 | `arrayFind`                                                           | `fn => [] => (T \| undefined)` | finds item via `fn: (item, index, all) => boolean`           |
 | `arrayForFind`                                                        | `[] => fn => (T \| undefined)` | flipped `arrayFind`                                          |
 | `arrayFlat`                                                           | `([][]) => []`                 | flattens array one level deep                                |
-| `arrayIncludes`                                                       | `value => [] => boolean`       | `true` if `value` is in the array                            |
+| [`arrayIncludes`](#arrayincludes)                                     | `value => [] => boolean`       | `true` if `value` is in the array                            |
 | [`arrayForInclude`](#arrayforinclude)                                 | `[] => value => boolean`       | flipped `arrayIncludes`                                      |
 | [`arrayJoin`](#arrayjoin)                                             | `separator => [] => string`    | joins array items into a string using the `separator`        |
 | `arrayForJoin`                                                        | `[] => separator => string`    | flipped `arrayJoin`                                          |
@@ -64,6 +64,14 @@ const isValidColor = arrayForInclude(Object.values(ValidColor) as string[]);
 
 isValidColor(ValidColor.BLUE); // -> true
 isValidColor('yellow'); // -> false
+```
+
+### arrayIncludes
+
+```typescript
+const hasZero = arrayIncludes(0);
+hasZero([1, 2, 3]); // -> false
+hasZero([0, 1, 2]); // -> true
 ```
 
 ### arrayJoin
