@@ -4,13 +4,13 @@
 
 Simple utilities.
 
-| name               | info                             |
-| ------------------ | -------------------------------- |
-| `isNullUndefined`  | type guard                       |
-| `jsonCopy`         |                                  |
-| `jsonDiff`         | [returns diff object](#jsondiff) |
-| `jsonEqual`        |                                  |
-| `notNullUndefined` | type guard                       |
+| name                    | info                |
+| ----------------------- | ------------------- |
+| `isNullUndefined`       | type guard          |
+| `jsonCopy`              |                     |
+| [`jsonDiff`](#jsondiff) | returns diff object |
+| `jsonEqual`             |                     |
+| `notNullUndefined`      | type guard          |
 
 ## Examples
 
