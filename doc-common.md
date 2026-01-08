@@ -4,10 +4,22 @@
 
 Simple utilities.
 
-| name               | info       |
-| ------------------ | ---------- |
-| `isNullUndefined`  | type guard |
-| `jsonCopy`         |            |
-| `jsonDiff`         |            |
-| `jsonEqual`        |            |
-| `notNullUndefined` | type guard |
+| name               | info                             |
+| ------------------ | -------------------------------- |
+| `isNullUndefined`  | type guard                       |
+| `jsonCopy`         |                                  |
+| `jsonDiff`         | [returns diff object](#jsondiff) |
+| `jsonEqual`        |                                  |
+| `notNullUndefined` | type guard                       |
+
+## Examples
+
+### jsonDiff
+
+```typescript
+jsonDiff({a: 12}, {a: 12});
+// -> {}
+
+jsonDiff({a: 12}, {a: 13});
+// -> {a: {oldValue: 12, newValue: 13}}
+```
