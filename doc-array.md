@@ -21,7 +21,7 @@ _FYI_ All functions are based on immutability.
 | `arrayForFind`                                                        | `[] => fn => (T \| undefined)` | flipped `arrayFind`                                          |
 | `arrayFlat`                                                           | `([][]) => []`                 | flattens array one level deep                                |
 | `arrayIncludes`                                                       | `value => [] => boolean`       | `true` if `value` is in the array                            |
-| `arrayForInclude`                                                     | `[] => value => boolean`       | flipped `arrayIncludes`                                      |
+| [`arrayForInclude`](#arrayforinclude)                                 | `[] => value => boolean`       | flipped `arrayIncludes`                                      |
 | `arrayJoin`                                                           | `separator => [] => string`    | joins array items into a string using the `separator`        |
 | `arrayForJoin`                                                        | `[] => separator => string`    | flipped `arrayJoin`                                          |
 | `arrayMap`                                                            | `fn => [] => []`               | maps items via `fn: (item, index, all) => itemNew`           |
@@ -50,6 +50,20 @@ extractSortedPersonNames([
   {name: 'Al', surname: 'Alson'},
   {name: 'Al', surname: 'Bobson'},
 ]); // -> ['Al', 'Bob']
+```
+
+### arrayForInclude
+
+```typescript
+export enum ValidColor {
+  BLUE = 'blue',
+  GREEN = 'green',
+  RED = 'red',
+}
+const isValidColor = arrayForInclude(Object.values(ValidColor) as string[]);
+
+isValidColor(ValidColor.BLUE); // -> true
+isValidColor('yellow'); // -> false
 ```
 
 ### arrayReduce
