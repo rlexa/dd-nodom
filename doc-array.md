@@ -22,7 +22,7 @@ _FYI_ All functions are based on immutability.
 | `arrayFlat`                       | `([][]) => []`                     | flattens array one level deep                                       |
 | `arrayIncludes`                   | `value => [] => boolean`           | `true` if `value` is in the array                                   |
 | `arrayForInclude`                 | `[] => value => boolean`           | flipped `arrayIncludes`                                             |
-| `arrayJoin`                       | `separator => [] => string`        | joints array items into a string using the `separator`              |
+| `arrayJoin`                       | `separator => [] => string`        | joins array items into a string using the `separator`               |
 | `arrayForJoin`                    | `[] => separator => string`        | flipped `arrayJoin`                                                 |
 | `arrayMap`                        | `fn => [] => []`                   | maps items via `fn: (item, index, all) => itemNew`                  |
 | `arrayForMap`                     | `[] => fn => []`                   | flipped `arrayMap`                                                  |
