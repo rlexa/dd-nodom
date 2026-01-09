@@ -25,12 +25,12 @@ export const dateMoveToEndOfLocalYear = compose(addLocalMs(-1), addLocalYears(1)
 
 ## Misc.
 
-| name            | info                                  |
-| --------------- | ------------------------------------- |
-| `DateDiffLevel` | (type) diff levels ('ms' ... 'years') |
-| `IsoWeekday`    | (enum) Mo-Su: 1-7                     |
-| `Weekday`       | (enum) Su-Sa: 0-6                     |
-| `dateZero`      | `Date` zero-ms instance               |
+| name            | info                                                                    |
+| --------------- | ----------------------------------------------------------------------- |
+| `DateDiffLevel` | (type) time difference levels used in diff functions ('ms' ... 'years') |
+| `IsoWeekday`    | (enum) Mo-Su: 1-7                                                       |
+| `Weekday`       | (enum) Su-Sa: 0-6                                                       |
+| `dateZero`      | `Date` zero-ms instance                                                 |
 
 ## Constants
 
