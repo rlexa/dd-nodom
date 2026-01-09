@@ -11,9 +11,15 @@ export const strNonNull = compose(coalesce(''), str);
 // #endregion
 // #region compare
 
-export const strCompare = (aa: string | null | undefined, bb: string | null | undefined) => (aa ?? '').localeCompare(bb ?? '');
-export const strCompareAlphanumeric = (aa: string | null | undefined, bb: string | null | undefined) =>
-  (aa ?? '').localeCompare(bb ?? '', 'en-US', {numeric: true});
+export function strCompare(aa: string, bb: string): number;
+export function strCompare(aa: string | null | undefined, bb: string | null | undefined) {
+  return (aa ?? '').localeCompare(bb ?? '');
+}
+
+export function strCompareAlphanumeric(aa: string, bb: string): number;
+export function strCompareAlphanumeric(aa: string | null | undefined, bb: string | null | undefined) {
+  return (aa ?? '').localeCompare(bb ?? '', 'en-US', {numeric: true});
+}
 
 // #endregion
 // #region include
