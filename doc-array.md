@@ -29,7 +29,7 @@ _FYI_ All functions are based on immutability.
 | [`arrayReduce`](#arrayreduce)                                         | `fnInit => fn => [] => acc`    | reduces array via `fn: (acc, item, index, all) => accNew`    |
 | `arrayRemove`                                                         | `value => [] => []`            | removes all occurrences of `value`                           |
 | `arrayForRemove`                                                      | `[] => value => []`            | flipped `arrayRemove`                                        |
-| `arraySome`                                                           | `fn => [] => boolean`          | `true` if some item is: `fn: (item, index, all) => boolean`  |
+| [`arraySome`](#arraysome)                                             | `fn => [] => boolean`          | `true` if some item is: `fn: (item, index, all) => boolean`  |
 | `arrayForSome`                                                        | `[] => fn => boolean`          | flipped `arraySome`                                          |
 | [`arraySortByKey`](#arraysortbykey)                                   | `(...keys) => [] => []`        | sorts array objects by keys (e.g. by `surname`, `name`)      |
 | `arraySort`                                                           | `fn => [] => []`               | sorts array via (optional) `fn: (itemA, itemB) => number`    |
@@ -112,6 +112,15 @@ personsToOptions([
 ```typescript
 const findMax = arrayReduce(() => 0)<number>((acc, ii) => Math.max(acc, ii));
 findMax([1, 4, 3, 2]); // -> 4
+```
+
+### arraySome
+
+```typescript
+const even = (value: number) => !(value % 2);
+const hasEven = arraySome(even);
+hasEven([1, 3, 5]); // -> false
+hasEven([1, 3, 4]); // -> true
 ```
 
 ### arraySortByKey
