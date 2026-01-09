@@ -1,6 +1,6 @@
 import {arrayFilterNotEmpty, arrayMap, arraySort, arrayUnique} from '../array';
-import {compose} from '../fp';
 import {strCompareAlphanumeric, strSplit, strTrim} from '../str';
+import {compose} from './compose';
 
 const toWords = compose(arrayFilterNotEmpty<string>, arrayMap(strTrim), strSplit(' '));
 const vocabularize = compose(arraySort(strCompareAlphanumeric), arrayUnique, toWords);

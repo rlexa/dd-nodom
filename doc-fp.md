@@ -10,7 +10,7 @@ Functional programming utilities.
 | `ceil`                            | mathematical                                                          |
 | `coalesce`                        | `coalesce(a)(b)` ~> `b ?? a`                                          |
 | [`compose`](#compose)             | right-to-left function composition                                    |
-| `curry`                           | `(a, b) => r` ~> `(a) => (b) => r`                                    |
+| [`curry`](#curry)                 | `(a, b) => r` ~> `(a) => (b) => r`                                    |
 | `div`                             | mathematical division                                                 |
 | [`findOrDefault`](#findOrDefault) | handler finder (returns first fn that returns not-null or default fn) |
 | `flip`                            | `(a) => (b) => r` ~> `(b) => (a) => r`                                |
@@ -36,7 +36,25 @@ vocabularize('  apple melon     berry apple   pumpkin   banana ');
 // -> ['apple', 'banana', 'berry', 'melon', 'pumpkin']
 ```
 
+### curry
+
+Currying breaks up a function into a series of single-argument functions.
+
+```typescript
+const extractObjectValue = <T>(object: T, key: keyof T) => object[key];
+const extractor = curry(extractObjectValue);
+
+const item = {name: 'Al', age: 30, surname: 'Alson'};
+
+const getter = extractor(item);
+getter('age'); // --> 30
+getter('name'); // --> 'Al'
+getter('surname'); // --> 'Alson'
+```
+
 ### findOrDefault
+
+Returns the first handler's result that is not `null` or the result of the default handler. Can be used for error handlers of specific types or anonymous data object consumers or similar.
 
 ```typescript
 const handleErrorCode = (err: unknown) => (typeof err !== 'number' ? null : `Error code: ${err}`);

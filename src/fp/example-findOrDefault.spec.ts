@@ -1,5 +1,5 @@
 import {isNullUndefined} from '../common';
-import {findOrDefault} from '../fp';
+import {findOrDefault} from './common';
 
 const handleErrorCode = (err: unknown) => (typeof err !== 'number' ? null : `Error code: ${err}`);
 const handleErrorObject = (err: unknown) =>
