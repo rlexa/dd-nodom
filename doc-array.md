@@ -24,7 +24,7 @@ _FYI_ All functions are based on immutability.
 | [`arrayForInclude`](#arrayforinclude)                                 | `[] => value => boolean`       | flipped `arrayIncludes`                                      |
 | [`arrayJoin`](#arrayjoin)                                             | `separator => [] => string`    | joins array items into a string using the `separator`        |
 | `arrayForJoin`                                                        | `[] => separator => string`    | flipped `arrayJoin`                                          |
-| `arrayMap`                                                            | `fn => [] => []`               | maps items via `fn: (item, index, all) => itemNew`           |
+| [`arrayMap`](#arraymap)                                               | `fn => [] => []`               | maps items via `fn: (item, index, all) => itemNew`           |
 | `arrayForMap`                                                         | `[] => fn => []`               | flipped `arrayMap`                                           |
 | [`arrayReduce`](#arrayreduce)                                         | `fnInit => fn => [] => acc`    | reduces array via `fn: (acc, item, index, all) => accNew`    |
 | `arrayRemove`                                                         | `value => [] => []`            | removes all occurrences of `value`                           |
