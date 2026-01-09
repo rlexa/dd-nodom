@@ -26,6 +26,8 @@ Functional programming utilities.
 
 ### compose
 
+Functions composition allows to create new functionality from existing functions in a declarative point-free way.
+
 ```typescript
 const toWords = compose(arrayFilterNotEmpty<string>, arrayMap(strTrim), strSplit(' '));
 const vocabularize = compose(arraySort(strCompareAlphanumeric), arrayUnique, toWords);
