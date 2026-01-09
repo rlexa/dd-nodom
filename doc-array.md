@@ -32,7 +32,7 @@ _FYI_ All functions are based on immutability.
 | [`arraySome`](#arraysome)                                             | `fn => [] => boolean`          | `true` if some item is: `fn: (item, index, all) => boolean`  |
 | `arrayForSome`                                                        | `[] => fn => boolean`          | flipped `arraySome`                                          |
 | [`arraySortByKey`](#arraysortbykey)                                   | `(...keys) => [] => []`        | sorts array objects by keys (e.g. by `surname`, `name`)      |
-| `arraySort`                                                           | `fn => [] => []`               | sorts array via (optional) `fn: (itemA, itemB) => number`    |
+| [`arraySort`](#arraysort)                                             | `fn => [] => []`               | sorts array via (optional) `fn: (itemA, itemB) => number`    |
 | `arrayForSort`                                                        | `[] => fn => []`               | flipped `arraySort`                                          |
 | `arrayUnique`                                                         | `[] => []`                     | removes duplicates                                           |
 
@@ -121,6 +121,18 @@ const even = (value: number) => !(value % 2);
 const hasEven = arraySome(even);
 hasEven([1, 3, 5]); // -> false
 hasEven([1, 3, 4]); // -> true
+```
+
+### arraySort
+
+```typescript
+const sortStandard = arraySort(strCompare);
+const sortAlphanumeric = arraySort(strCompareAlphanumeric);
+
+const values = ['a11', 'a100'];
+
+sortStandard(values); // -> ['a100', 'a11']
+sortAlphanumeric(values); // -> ['a11', 'a100']
 ```
 
 ### arraySortByKey
