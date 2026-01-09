@@ -87,6 +87,26 @@ const text2 = ['Bye world!', 'Stay green.'];
 makeArticle([text1, text2]); // -> 'Hello world! Nice clouds.\nBye world! Stay green.'
 ```
 
+### arrayMap
+
+```typescript
+type Person = {id: number; name: string; surname: string};
+type ListOption<T> = {value: T; label: string};
+
+const personToOption = (item: Person): ListOption<number> => ({value: item.id, label: `${item.name} ${item.surname}`});
+
+const personsToOptions = arrayMap(personToOption);
+
+personsToOptions([
+  {id: 1, name: 'Al', surname: 'Alson'},
+  {id: 2, name: 'Bob', surname: 'Bobson'},
+]);
+// -> [
+//      {value: 1, label: 'Al Alson'},
+//      {value: 2, label: 'Bob Bobson'},
+//    ]
+```
+
 ### arrayReduce
 
 ```typescript
