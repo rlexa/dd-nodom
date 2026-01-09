@@ -27,7 +27,8 @@ Functional programming utilities.
 ### compose
 
 ```typescript
-const vocabularize = compose(arraySort(strCompareAlphanumeric), arrayUnique, arrayFilterNotEmpty<string>, arrayMap(strTrim), strSplit(' '));
+const toWords = compose(arrayFilterNotEmpty<string>, arrayMap(strTrim), strSplit(' '));
+const vocabularize = compose(arraySort(strCompareAlphanumeric), arrayUnique, toWords);
 
 vocabularize('  apple melon     berry apple   pumpkin   banana ');
 // -> ['apple', 'banana', 'berry', 'melon', 'pumpkin']
