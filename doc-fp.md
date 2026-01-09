@@ -4,23 +4,23 @@
 
 Functional programming utilities.
 
-| name                  | info                                                                  |
-| --------------------- | --------------------------------------------------------------------- |
-| `add`                 | mathematical addition                                                 |
-| `ceil`                | mathematical                                                          |
-| `coalesce`            | `coalesce(a)(b)` ~> `b ?? a`                                          |
-| [`compose`](#compose) | right-to-left function composition                                    |
-| `curry`               | `(a, b) => r` ~> `(a) => (b) => r`                                    |
-| `div`                 | mathematical division                                                 |
-| `findOrDefault`       | handler finder (returns first fn that returns not-null or default fn) |
-| `flip`                | `(a) => (b) => r` ~> `(b) => (a) => r`                                |
-| `floor`               | mathematical                                                          |
-| `max`                 | mathematical                                                          |
-| `min`                 | mathematical                                                          |
-| `mult`                | mathematical multiplication                                           |
-| `not`                 | boolean                                                               |
-| `round`               | mathematical                                                          |
-| `sub`                 | mathematical subtraction                                              |
+| name                              | info                                                                  |
+| --------------------------------- | --------------------------------------------------------------------- |
+| `add`                             | mathematical addition                                                 |
+| `ceil`                            | mathematical                                                          |
+| `coalesce`                        | `coalesce(a)(b)` ~> `b ?? a`                                          |
+| [`compose`](#compose)             | right-to-left function composition                                    |
+| `curry`                           | `(a, b) => r` ~> `(a) => (b) => r`                                    |
+| `div`                             | mathematical division                                                 |
+| [`findOrDefault`](#findOrDefault) | handler finder (returns first fn that returns not-null or default fn) |
+| `flip`                            | `(a) => (b) => r` ~> `(b) => (a) => r`                                |
+| `floor`                           | mathematical                                                          |
+| `max`                             | mathematical                                                          |
+| `min`                             | mathematical                                                          |
+| `mult`                            | mathematical multiplication                                           |
+| `not`                             | boolean                                                               |
+| `round`                           | mathematical                                                          |
+| `sub`                             | mathematical subtraction                                              |
 
 ## Examples
 
@@ -34,4 +34,25 @@ const vocabularize = compose(arraySort(strCompareAlphanumeric), arrayUnique, toW
 
 vocabularize('  apple melon     berry apple   pumpkin   banana ');
 // -> ['apple', 'banana', 'berry', 'melon', 'pumpkin']
+```
+
+### findOrDefault
+
+```typescript
+const handleErrorCode = (err: unknown) => (typeof err !== 'number' ? null : `Error code: ${err}`);
+const handleErrorObject = (err: unknown) =>
+  isNullUndefined(err) || typeof err !== 'object' || !('message' in err) || typeof err.message !== 'string'
+    ? null
+    : `Error message: ${err.message}`;
+const handleErrorFactory = findOrDefault(() => `Unknown error`);
+const handleError = handleErrorFactory([handleErrorCode, handleErrorObject]);
+
+handleError(null);
+// -> 'Unknown error'
+
+handleError(123);
+// -> 'Error code: 123'
+
+handleError({message: 'Oh noez!'});
+// -> 'Error message: Oh noez!'
 ```
