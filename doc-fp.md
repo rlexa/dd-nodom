@@ -18,7 +18,7 @@ Functional programming utilities.
 | `max`                             | mathematical                                                          |
 | `min`                             | mathematical                                                          |
 | `mult`                            | mathematical multiplication                                           |
-| `not`                             | boolean                                                               |
+| `not`                             | boolean invert                                                        |
 | `round`                           | mathematical                                                          |
 | `sub`                             | mathematical subtraction                                              |
 
@@ -38,7 +38,7 @@ vocabularize('  apple melon     berry apple   pumpkin   banana ');
 
 ### curry
 
-Currying breaks up a function into a series of single-argument functions.
+Currying breaks up a function into a series of single-argument functions, priming it for partial application.
 
 ```typescript
 const extractObjectValue = <T>(object: T, key: keyof T) => object[key];
