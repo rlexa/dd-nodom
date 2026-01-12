@@ -10,7 +10,7 @@ The JS `Date` instance is always created using the runtime's local timezone and 
 
 ### Local-versus-UTC
 
-_FYI_ operators with `Local` infix return the values from the point of view of the local runtime timezone and always have an additional `Utc` variant which returns the values in UTC. For example for German time when creating a `Date` via `asDateNonNull('2000-01-01T00:00:00.000')` the util function `dateToLocalDatePart` will return `'2000-01-01'` and `dateToUtcDatePart` will return `'1999-12-31'`. In nearly all cases the `Local` variant is what you need.
+Library's operators with `Local` infix return the values from the point of view of the local runtime timezone and always have an additional `Utc` variant which returns the values in UTC. For example for German time when creating a `Date` via `asDateNonNull('2000-01-01T00:00:00.000')` the util function `dateToLocalDatePart` will return `'2000-01-01'` and `dateToUtcDatePart` will return `'1999-12-31'`. In nearly all cases the `Local` variant is what you need.
 
 ### Timestamps
 
