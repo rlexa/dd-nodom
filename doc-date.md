@@ -184,7 +184,7 @@ _FYI_ see [Local-versus-UTC](#local-versus-utc) for Utc column.
 
 ## Mutate
 
-_FYI_ All operators use immutability approach except for explicit `dateMutate` function. This function clones the given `Date` instance via allows mutation in place via callback function: `(fn: (date: Date) => void) => (val: Date) => Date`.
+_FYI_ All operators use immutability approach except for explicit `dateMutate` function. This function clones the given `Date` instance and allows clone's mutation in place via pre-applied callback function: `(fn: (date: Date) => void) => (val: Date) => Date`.
 
 ### Based on ms value (adds as duration)
 
