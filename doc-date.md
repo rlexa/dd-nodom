@@ -4,9 +4,25 @@
 
 Date utilities (mostly based on partial application).
 
-_FYI_ Most operators have an additional `as`-prefixed variant which can be applied directly to a date-like value e.g. alongside `dateToIso` there is also `asIso`.
+## JS Date shenanigans
 
-_FYI_ operators with `Local` infix always have an additional `Utc` variant e.g. `dateToLocalDatePart` and `dateToUtcDatePart`.
+The JS `Date` instance is always created using the runtime's local timezone and does not retain the timezone information it was created from. It can be created from any timestamp and transformed into ISO UTC string. This may look like a big issue but in reality it is very rare that the same runtime has to deal with different timezones at once. Usually the business cases revolve around either a timestamp denoting a moment in time (e.g. the time of the moon landing) or a business time which is a different timestamp based on the timezone (e.g. New Year's Eve).
+
+### Local-versus-UTC
+
+_FYI_ operators with `Local` infix return the values from the point of view of the local runtime timezone and always have an additional `Utc` variant which returns the values in UTC. For example for German time when creating a `Date` via `asDateNonNull('2000-01-01T00:00:00.000')` the util function `dateToLocalDatePart` will return `'2000-01-01'` and `dateToUtcDatePart` will return `'1999-12-31'`. In nearly all cases the `Local` variant is what you need.
+
+### Timestamps
+
+When dealing with timestamps the data transfer object can be either it's ms number (or Unix timestamp which is the same but less precise as it's in seconds) or it's ISO string. For example ISO `2000-01-01T00:00:00.000Z` equals to `946684800000` ms value or `946684800` Unix time value. When working with timestamps in e.g. frontend the resulting `Date` instance will present it in the local client's time and when sending the value back to the server it needs to be transformed to ISO (UTC) or to the ms value again so there is no problem there.
+
+### Business time
+
+For business time the timezone is actually not important because the value is denoting the time in any given timezone at evaluation time. Therefore it is best to save those values not as timestamps but as DateOnly (`2000-01-01`) or DateTimeOnly (`2000-01-01T00:00:00.000`) string values which also happen to be sortable due to the ISO format. When creating a `Date` instance with `asDate` or `asDateNonNull` the value will be transformed and presented in the local runtime timezone which is again exactly what a user would expect for business time when shown in e.g. a frontend client. On changing and saving the value make sure to remove the timezone information using e.g. `asLocalDatePart` which will transform the value to `yyyy-mm-dd` string in client's local timezone (which is what the user selected) before sending it back to the server.
+
+### Parallel timezones
+
+It is very rare to have to deal with multiple timezones in the same runtime (for example to show multiple clocks for trading applications). In this case the created `Date` instances need to be manually moved to the desired timezone offset. This is out of scope of this documentation (but take a look at `Intl` API).
 
 ## Building own operators
 
@@ -60,6 +76,10 @@ _FYI_ when using `compose` prefer using `asDateNonNull` over `asDate` for better
 
 ## Getter
 
+_FYI_ Most operators have an additional `as`-prefixed variant which can be applied directly to a date-like value e.g. alongside `dateToIso` which is only implemented for a `Date` instance there is also `asIso` which can be applied to any date-like value.
+
+_FYI_ see [Local-versus-UTC](#local-versus-utc) for Utc column.
+
 | name                        | info                              | as...   | Utc     |
 | --------------------------- | --------------------------------- | ------- | ------- |
 | `dateToTimeValue`           | `Date` javascript ms value        | &check; |         |
@@ -87,6 +107,10 @@ _FYI_ when using `compose` prefer using `asDateNonNull` over `asDate` for better
 | `dateToLocalYearString`     | full year (e.g. `"0980"`)         | &check; | &check; |
 
 ## Stringify
+
+_FYI_ Most operators have an additional `as`-prefixed variant which can be applied directly to a date-like value e.g. alongside `dateToIso` which is only implemented for a `Date` instance there is also `asIso` which can be applied to any date-like value.
+
+_FYI_ see [Local-versus-UTC](#local-versus-utc) for Utc column.
 
 | name                  | info                              | as...   | Utc     |
 | --------------------- | --------------------------------- | ------- | ------- |
@@ -145,6 +169,10 @@ _FYI_ Uses `Intl` API or a non-flexible fallback.
 
 ## ISO Year Week
 
+_FYI_ Most operators have an additional `as`-prefixed variant which can be applied directly to a date-like value e.g. alongside `dateToIso` which is only implemented for a `Date` instance there is also `asIso` which can be applied to any date-like value.
+
+_FYI_ see [Local-versus-UTC](#local-versus-utc) for Utc column.
+
 | name                            | info                                                | as...   | Utc |
 | ------------------------------- | --------------------------------------------------- | ------- | --- |
 | `dateToLocalIsoYearWeek`        | identifies `[year, week]`                           | &check; |     |
@@ -156,7 +184,7 @@ _FYI_ Uses `Intl` API or a non-flexible fallback.
 
 ## Mutate
 
-_FYI_ All operators use immutability approach except for explicit `dateMutate` function.
+_FYI_ All operators use immutability approach except for explicit `dateMutate` function. This function clones the given `Date` instance via allows mutation in place via callback function: `(fn: (date: Date) => void) => (val: Date) => Date`.
 
 ### Based on ms value (adds as duration)
 
@@ -175,6 +203,8 @@ These operators add value as duration (not usable for calendar based semantic mu
 
 These operators add calendar based value semantically (not usable for duration mutations).
 
+_FYI_ see [Local-versus-UTC](#local-versus-utc) for Utc column.
+
 | name              | info | Utc     |
 | ----------------- | ---- | ------- |
 | `addLocalMs`      |      | &check; |
@@ -189,6 +219,8 @@ These operators add calendar based value semantically (not usable for duration m
 ### Moving
 
 _FYI_ These operators have `MoveToStart` and `MoveToEnd` infix variants.
+
+_FYI_ see [Local-versus-UTC](#local-versus-utc) for Utc column.
 
 | name                             | info                   | ToEnd   | Utc     |
 | -------------------------------- | ---------------------- | ------- | ------- |
